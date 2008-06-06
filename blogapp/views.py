@@ -18,7 +18,7 @@ def post_by_name(request, post_name, dummy_comments=''):
         context = Context({
             'posts': [post],
             'comments': comments,
-            'title': post.title + " // ",
+            'title': post.title + " - ",
             })
         html = template.render(context)
     except:
