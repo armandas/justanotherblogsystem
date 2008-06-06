@@ -1,0 +1,45 @@
+{% load filters %}
+    <h3 id="comments_title"{% if photo%} onclick="toggleComments()"{% endif %}><a name="comments">{{ comments.count|dgs:"Komentarai" }}</a></h3>
+    <div id="comments">
+        {% for comment in comments %}
+        <hr class="hidden">
+        <div class="comment">
+            <div class="name">
+                <img src="http://www.gravatar.com/avatar.php?gravatar_id=43d324e3597898f03d0e898ce98efb27&amp;default=http%3A%2F%2Fwww.armandas.lt%2Fres%2Fimages%2Fkenc.gif&amp;size=48" alt="{{ comment.author }}">
+                <h4>{% if comment.author_website%}<a href="{{ comment.author_website }}">{{ comment.author_name }}</a>{% else %}{{ comment.author_name }}{% endif %}</h4>
+                <small class="date"><em>{{ comment.date|date:"Y-m-d, H:i" }}</em></small>
+            </div>
+            <div class="text">
+                <p>{{ comment.content|nl2br }}</p>
+            </div>
+        </div>
+        {% endfor %}
+        <hr class="hidden">
+
+        <form method="POST" action="take_comment.php" id="commentform">
+            <div id="fleft">
+                <label>
+                    <em>*</em> Vardas:<br>
+                    <input name="name" value="" type="text" tabindex="1">
+                </label>
+                <label>
+                    <em>*</em> E. paštas:<br>
+
+                    <input name="email" value="" type="text" tabindex="2">
+                </label>
+                <label>
+                    Svetainė:<br>
+                    <input name="website" value="" type="text" tabindex="3">
+                </label>
+                <button type="submit" name="submit" tabindex="7">Siųsti</button>
+            </div>
+
+            <div id="fright">
+                <label>
+                    <em>*</em> Komentaras:<br>
+                    <textarea name="comment" tabindex="5" rows="7" cols="60"></textarea>
+                </label>
+            </div>
+            <!--p id="checkbox"><label><input type="checkbox" name="notify" tabindex="6">Pranešti apie naujus įrašo komentarus el paštu.</label></p-->
+        </form>
+    </div>
