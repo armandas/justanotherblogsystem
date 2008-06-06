@@ -1,7 +1,10 @@
 from django.template.loader import get_template
 from django.template import Context
 from django.http import HttpResponse
+from django.views.defaults import page_not_found
+
 from blogapp.models import *
+from blogapp.utilities import not_found
 
 def homepage(request):
     posts = Post.objects.all()[:5]
@@ -9,7 +12,7 @@ def homepage(request):
     html = template.render(Context({'posts': posts,}))
     return HttpResponse(html)
 
-def post_by_name(request, post_name, dummy_comments=''):
+def post_by_name(request, post_name, fragment_identifier):
     try:
         post = Post.objects.get(name=post_name)
         comments = post.comment_set.all()
@@ -21,10 +24,9 @@ def post_by_name(request, post_name, dummy_comments=''):
             'title': post.title + " // ",
             })
         html = template.render(context)
+        return HttpResponse(html)
     except:
-        template = get_template('404.html')
-        html = template.render(Context({'title': ['Error 404']}))
-    return HttpResponse(html)
+        return not_found(request, message="Sorry, the requested post does not exist.")
 
 def posts_by_tag(request, tag_name):
     try:
@@ -32,13 +34,14 @@ def posts_by_tag(request, tag_name):
         posts = tag.post_set.all()[:5]
         template = get_template('blog.html')
         html = template.render(Context({'posts': posts,}))
+        return HttpResponse(html)
     except:
-        template = get_template('404.html')
-        html = template.render(Context({'title': ['Error 404']}))
-    return HttpResponse(html)
+        return not_found(request, message="Sorry, the tag you are searching for does not exist.")
 
 def posts_by_date(request, year, month):
     posts = Post.objects.filter(date__year=year, date__month=month)[:5]
+    if not posts:
+        return not_found(request, message="Sorry, there are no posts that month.")
     template = get_template('blog.html')
     html = template.render(Context({'posts': posts,}))
     return HttpResponse(html)
