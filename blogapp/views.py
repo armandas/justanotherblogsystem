@@ -42,16 +42,3 @@ def posts_by_date(request, year, month):
     template = get_template('blog.html')
     html = template.render(Context({'posts': posts,}))
     return HttpResponse(html)
-
-def foto(request):
-    post = {}
-    post['name'] = 'Test'
-    post['content'] = '<p>This is a test post :P</p>'
-    post['date'] = datetime.datetime(2008, 5, 2, 23, 24)
-    post['comment_count'] = 3
-    photo = True
-    #comments = post.comment_set.all()
-
-    t = get_template('foto.html')
-    html = t.render(Context({'post': post, 'comments': comments, 'photo': photo}))
-    return HttpResponse(html)
