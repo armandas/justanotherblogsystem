@@ -1,7 +1,6 @@
 from django.template.loader import get_template
 from django.template import Context
 from django.http import HttpResponse
-from django.views.defaults import page_not_found
 
 from blogapp.models import *
 from blogapp.utilities import not_found
@@ -41,7 +40,7 @@ def posts_by_tag(request, tag_name):
 def posts_by_date(request, year, month):
     posts = Post.objects.filter(date__year=year, date__month=month)[:5]
     if not posts:
-        return not_found(request, message="Sorry, there are no posts that month.")
+        return not_found(request, message="Sorry, there are no posts written that month.")
     template = get_template('blog.html')
     html = template.render(Context({'posts': posts,}))
     return HttpResponse(html)
