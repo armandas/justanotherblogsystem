@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load filters %}
+
+{% block content %}
+    <div id="menu">
+        <a href="{% url blogapp.views.homepage %}">Namai</a>
+        <a href="/galerija/">Foto</a>
+        <a href="http://feeds.feedburner.com/armandas">RSS</a>
+    </div>
+    <hr class="hidden">
+
+    {% for post in posts %}
+        {% include "post.html" %}
+    {% endfor %}
+
+    {% if comments %}
+        {% include "comments.html" %}
+    {% endif %}
+
+    <div id="sidebar">
+        <h3>Gairės</h3>
+            <p></p>
+
+        <h3>Draugai</h3>
+            <ul>
+            <li><a href="http://blog.bassline.lt/">sliekas_kanibalas</a></li>
+            <li><a href="http://crimblog.xz.lt/">Criminal</a></li>
+            <li><a href="http://www.p4i.lt/">P4I</a></li>
+            <li><a href="http://symazz.info/">Symazz</a></li>
+            <li><a href="http://www.arturaz.net/blog/">Artūras Šlajus</a></li>
+            <li><a href="http://www.tominix.info/">Tominix</a></li>
+            <li><a href="http://laisvai.net/tadas/">Tadas</a></li>
+            </ul>
+
+        <h3>Muzika</h3>
+            <ul>
+                <li><a href="http://www.last.fm/music/Ed%2BSolo%2B%2526%2BSkool%2Bof%2BThought/_/When+I+Was+A+Yout" title="Ed Solo &amp; Skool of Thought - When I Was A Yout" rel="nofollow">Ed&nbsp;Solo&nbsp;&amp;&nbsp;Skool&nbsp;of&nbsp;Thought&nbsp;-&nbsp;When&nbsp;I&nbsp;Was&nbsp;A&nbsp;Yout</a></li>
+                <li><a href="http://www.last.fm/music/Kondencuotas+Pienas/_/While+You+Were+Dreaming" title="Kondencuotas Pienas - While You Were Dreaming" rel="nofollow">Kondencuotas&nbsp;Pienas&nbsp;-&nbsp;While&nbsp;You&nbsp;Were&nbsp;Dreaming</a></li>
+                <li><a href="http://www.last.fm/music/Airwave/_/Ladyblue+%28Markus+Schulz%27s+Coldharbour+Mix%29" title="Airwave - Ladyblue (Markus Schulz&#039;s Coldharbour Mix)" rel="nofollow">Airwave&nbsp;-&nbsp;Ladyblue&nbsp;(Markus&nbsp;Schulz&#039;s&nbsp;Coldharbour&nbsp;Mix)</a></li>
+                <!--// Update in -1518 seconds. //-->
+                <li><a href="http://www.last.fm/user/armandas/" class="odd" style="text-align: center;" title="Mano last.fm anketa">[žiūrėti daugiau]</a></li>
+            </ul>
+    </div>
+    <hr class="hidden">
+{% endblock %}
