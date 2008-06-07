@@ -3,24 +3,24 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta name="Author" content="Armandas Jarušauskas">
-    <meta name="Description" content="Personal webphotolog">
+    <meta name="Author" content="{{ options.blog_author }}">
+    <meta name="Description" content="{{ options.blog_description }}">
     <meta name="robots" content="index, follow">
-    <link rel="alternate" type="application/rss+xml" title="Blog feed (RSS)" href="http://www.armandas.lt{% url blogapp.utilities.feed "rss" %}" />
-    <link rel="alternate" type="application/atom+xml" title="Blog feed (Atom)" href="http://www.armandas.lt{% url blogapp.utilities.feed "atom" %}" />
+    <link rel="alternate" type="application/rss+xml" title="Blog feed (RSS)" href="{% url blogapp.views.feed "rss" %}">
+    <link rel="alternate" type="application/atom+xml" title="Blog feed (Atom)" href="{% url blogapp.views.feed "atom" %}">
     <link rel="shortcut icon" href="favicon.ico">
     <link rel="stylesheet" type="text/css" href="css/print.css" media="print">
     <link rel="openid.server" href="http://www.myopenid.com/server">
     <link rel="openid.delegate" href="http://armandas.myopenid.com/">
     {% if photo %}<style type="text/css" media="screen">@import url('css/main.css');</style>{% endif %}
-    <title>{{ title }}Armando foto+blogas</title>
+    <title>{{ title }}{{ options.blog_title }}</title>
 </head>
 <body>
 
 <div id="wrapper">
 
     <div id="header">
-        <h1><span>Armando foto+blogas</span></h1>
+        <h1><span>{{ options.blog_title }}</span></h1>
     </div>
 {% block content %}{% endblock %}
 </div>

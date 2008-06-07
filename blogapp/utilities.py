@@ -10,11 +10,3 @@ def not_found(request, title='Error 404', message='Page not found'):
     c = Context({'title': title, 'message': message})
     html = t.render(c)
     return HttpResponseNotFound(html)
-
-def feed(request, feed_type):
-    posts = Post.objects.all()[:10]
-    template = "feeds/%s.xml" % feed_type
-    mimetype = "application/%s+xml" % feed_type
-    updated = posts[0].date #used by atom
-
-    return render_to_response(template, {'posts': posts, 'updated': updated})#, mimetype=mimetype)
