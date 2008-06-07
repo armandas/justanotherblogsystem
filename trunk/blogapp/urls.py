@@ -6,3 +6,7 @@ urlpatterns = patterns('blogapp.views',
     (r'^tags/([a-z0-9-]+)/$', 'posts_by_tag'),
     (r'^archive/([0-9]{4})/([0-9]{2})/$', 'posts_by_date'),
 )
+
+urlpatterns += patterns('blogapp.utilities',
+    (r'feed/(rss|atom)/$', 'feed'),
+)
