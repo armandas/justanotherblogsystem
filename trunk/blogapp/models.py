@@ -62,3 +62,12 @@ class Comment(models.Model):
 
     class Meta:
         ordering = ["date"]
+
+class Option(models.Model):
+    name = models.CharField(maxlength=32)
+    value = models.CharField(maxlength=255)
+
+    class Admin:
+        list_display = ('name', 'value')
+        ordering = ('name',)
+        search_fields = ('name', 'value')
