@@ -13,7 +13,7 @@
             <pubDate>{{ post.date|date:"D, d M Y H:i:s" }} GMT</pubDate>
             <description>
                 <![CDATA[
-                {{ post.content }}
+                {{ post.content|safe }}
                 ]]>
             </description>
         </item>

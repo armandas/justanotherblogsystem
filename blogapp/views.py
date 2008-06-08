@@ -55,4 +55,4 @@ def feed(request, feed_type):
         'options': options,
         }
 
-    return render_to_response(template, context)#, mimetype=mimetype)
+    return render_to_response(template, context, mimetype=mimetype)
