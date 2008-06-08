@@ -21,10 +21,8 @@ def not_found(request, title='Error 404', message='Page not found'):
     return HttpResponseNotFound(html)
 
 def options():
-    options = {}
-    opts = Option.objects.all()
-    for opt in opts:
-        options[opt.name] = opt.value
+    opt_list = [(opt.name, opt.value) for opt in Option.objects.all()]
+    options = dict(opt_list)
     return options
 
 def tag_cloud():
@@ -37,10 +35,11 @@ def tag_cloud():
     cloud = []
 
     for tag in tags:
-        url = reverse('blogapp.views.posts_by_tag', args=[tag.name])
         posts = tag.post_set.count()
-        size = max_size * posts / popular
-        #sets size to min_size if size < min_size
-        size = (size < min_size) and min_size or size
-        cloud.append(pattern % (url, size, posts, tag.title))
+        if posts:
+            url = reverse('blogapp.views.posts_by_tag', args=[tag.name])
+            size = max_size * posts / popular
+            #sets size to min_size if size < min_size
+            size = (size < min_size) and min_size or size
+            cloud.append(pattern % (url, size, posts, tag.title))
     return cloud
