@@ -13,7 +13,7 @@
         <link href="{{ options.base_url }}{% url blogapp.views.post_by_name post.name %}"/>
         <id>{{ options.base_url }}{% url blogapp.views.post_by_name post.name %}</id>
         <updated>{{ post.date|date:"Y-m-d\TH:i:s\Z"}}</updated>
-        <content type="html">{{ post.content|escape }}</content>
+        <content type="html">{{ post.content }}</content>
     </entry>
     {% endfor %}
 </feed>
