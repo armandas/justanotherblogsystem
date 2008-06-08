@@ -1,19 +1,15 @@
-from django.template.loader import get_template
-from django.template import Context
+from django.template import RequestContext
 from django.shortcuts import render_to_response
 
 from blogapp.models import *
-from blogapp.utilities import not_found
+from blogapp.utilities import *
 
-#fetch blog options
-options = {}
-opts = Option.objects.all()
-for opt in opts:
-    options[opt.name] = opt.value
+BLOG_TPL = 'blog.html'
 
 def homepage(request):
     posts = Post.objects.all()[:5]
-    return render_to_response('blog.html', {'posts': posts, 'options': options,})
+    context = {'posts': posts,}
+    return render_to_response(BLOG_TPL, context, context_instance=RequestContext(request))
 
 def post_by_name(request, post_name):
     try:
@@ -22,10 +18,9 @@ def post_by_name(request, post_name):
         context = {
             'posts': [post],
             'comments': comments,
-            'title': post.title + " // ",
-            'options': options,
+            'title': post.title,
             }
-        return render_to_response('blog.html', context)
+        return render_to_response(BLOG_TPL, context, context_instance=RequestContext(request))
     except:
         return not_found(request, message="Sorry, the requested post does not exist.")
 
@@ -33,14 +28,16 @@ def posts_by_tag(request, tag_name):
     try:
         tag = Tag.objects.get(name=tag_name)
         posts = tag.post_set.all()[:5]
-        return render_to_response('blog.html', {'posts': posts, 'options': options,})
+        context = {'posts': posts,}
+        return render_to_response(BLOG_TPL, context, context_instance=RequestContext(request))
     except:
         return not_found(request, message="Sorry, the tag you are searching for does not exist.")
 
 def posts_by_date(request, year, month):
     posts = Post.objects.filter(date__year=year, date__month=month)[:5]
     if posts:
-        return render_to_response('blog.html', {'posts': posts, 'options': options,})
+        context = {'posts': posts,}
+        return render_to_response(BLOG_TPL, context, context_instance=RequestContext(request))
     else:
         return not_found(request, message="Sorry, there are no posts written that month.")
 
@@ -54,5 +51,4 @@ def feed(request, feed_type):
         'updated': updated,
         'options': options,
         }
-
     return render_to_response(template, context, mimetype=mimetype)

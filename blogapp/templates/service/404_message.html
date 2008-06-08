@@ -1,8 +1,8 @@
 {% extends "blog.html" %}
 
 {% block source %}
-    <h2>{{ title }}</h2>
-    <p>{{ message }}</p>
+    <h2>{{ err_title }}</h2>
+    <p>{{ err_message }}</p>
     <p>You can, however choose one (or more) of the following options:</p>
     <ul>
         <li>Check out <a href="{% url blogapp.views.homepage %}">new posts</a>, browse through archive or tags.</li>
