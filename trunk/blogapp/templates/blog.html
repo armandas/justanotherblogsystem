@@ -22,7 +22,7 @@
 
     <div id="sidebar">
         <h3>Gairės</h3>
-            <p></p>
+            <p>{% for tag in tags %}{{ tag|safe }} {% endfor %}</p>
 
         <h3>Draugai</h3>
             <ul>
