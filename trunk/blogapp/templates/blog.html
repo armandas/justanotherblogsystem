@@ -21,19 +21,18 @@
     {% block source %}{% endblock %}
 
     <div id="sidebar">
+        {% if tags %}
         <h3>Gairės</h3>
-            <p>{% for tag in tags %}{{ tag|safe }} {% endfor %}</p>
+            <p>{% for tag in tags %}<a href="{{ tag.uri }}" style="font-size: {{ tag.size }}px" title="({{ tag.post_count }})">{{ tag.title }}</a> {% endfor %}</p>
+        {% endif %}
 
+        {% if friends %}
         <h3>Draugai</h3>
             <ul>
-            <li><a href="http://blog.bassline.lt/">sliekas_kanibalas</a></li>
-            <li><a href="http://crimblog.xz.lt/">Criminal</a></li>
-            <li><a href="http://www.p4i.lt/">P4I</a></li>
-            <li><a href="http://symazz.info/">Symazz</a></li>
-            <li><a href="http://www.arturaz.net/blog/">Artūras Šlajus</a></li>
-            <li><a href="http://www.tominix.info/">Tominix</a></li>
-            <li><a href="http://laisvai.net/tadas/">Tadas</a></li>
+            {% for friend in friends %}
+                <li><a href="{{ friend.uri }}" rel="{{ friend.rel }}">{{ friend.name }}</a></li>{% endfor %}
             </ul>
+        {% endif %}
 
         <h3>Muzika</h3>
             <ul>
