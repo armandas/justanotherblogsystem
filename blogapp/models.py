@@ -65,7 +65,7 @@ class Comment(models.Model):
 
 class Option(models.Model):
     name = models.CharField(max_length=32)
-    value = models.CharField(max_length=255)
+    value = models.TextField(max_length=2048)
 
     class Admin:
         list_display = ('name', 'value')

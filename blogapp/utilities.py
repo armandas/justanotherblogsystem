@@ -8,9 +8,9 @@ from blogapp.models import *
 def blog_processor(request):
     context = {
         'options': options(),
-        'tags': tag_cloud(),
+        'tags': tag_list(),
         #'archive': archive(),
-        #'friends': friends(),
+        'friends': friends(),
     }
     return context
 
@@ -25,21 +25,42 @@ def options():
     options = dict(opt_list)
     return options
 
-def tag_cloud():
-    max_size = 20
-    min_size = 10
-    pattern = '<a href="%s" style="font-size: %dpx" title="(%d)">%s</a>'
+def tag_list():
+    max_size = int(options()['tag_cloud_font_size_max'])
+    min_size = int(options()['tag_cloud_font_size_min'])
 
     tags = Tag.objects.all()
     popular = max([tag.post_set.count() for tag in tags])
     cloud = []
 
     for tag in tags:
-        posts = tag.post_set.count()
-        if posts:
-            url = reverse('blogapp.views.posts_by_tag', args=[tag.name])
-            size = max_size * posts / popular
+        post_count = tag.post_set.count()
+        #only add tags with posts
+        #generates a list of dictionaries for easy usage in templates
+        if post_count:
+            size = max_size * post_count / popular
             #sets size to min_size if size < min_size
             size = (size < min_size) and min_size or size
-            cloud.append(pattern % (url, size, posts, tag.title))
+            t = {}
+            t['title'] = tag.title
+            t['name'] = tag.name
+            t['uri'] = reverse('blogapp.views.posts_by_tag', args=[tag.name])
+            t['size'] = size
+            t['post_count'] = post_count
+            cloud.append(t)
     return cloud
+
+def friends():
+    friends = options()['friends'].split("\r\n") #will be changed to \n when interface is done
+    friends = [friend.split("|", 2) for friend in friends]
+    if len(friends[0]) < 3:
+        return None
+
+    friend_list = []
+
+    #generate list of dictionaries for easy usage in templates
+    for friend in friends:
+        f = {}
+        f['name'], f['uri'], f['rel'] = friend
+        friend_list.append(f)
+    return friend_list
