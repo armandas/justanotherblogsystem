@@ -30,7 +30,7 @@
         <h3>Draugai</h3>
             <ul>
             {% for friend in friends %}
-                <li><a href="{{ friend.uri }}" rel="{{ friend.rel }}">{{ friend.name }}</a></li>{% endfor %}
+                <li><a href="{{ friend.uri }}" rel="{{ friend.rel }}"{% if friend.about %} title="{{ friend.about }}"{% endif %}>{{ friend.name }}</a></li>{% endfor %}
             </ul>
         {% endif %}
 

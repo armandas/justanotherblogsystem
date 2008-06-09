@@ -1,0 +1,67 @@
+(lp0
+(dp1
+S'about'
+p2
+S''
+p3
+sS'uri'
+p4
+S'http://symazz.info/'
+p5
+sS'rel'
+p6
+S'friend, contact'
+p7
+sS'name'
+p8
+S'Symazz'
+p9
+sa(dp10
+g2
+g3
+sg4
+S'http://arturaz.net/blog/'
+p11
+sg6
+S'contact, colleague'
+p12
+sg8
+S'Art\xc5\xabras \xc5\xa0lajus'
+p13
+sa(dp14
+g2
+g3
+sg4
+S'http://crimblog.xz.lt/'
+p15
+sg6
+S'friend, contact'
+p16
+sg8
+S'Criminal'
+p17
+sa(dp18
+g2
+g3
+sg4
+S'http://laisvai.net/tadas'
+p19
+sg6
+S'friend, contact'
+p20
+sg8
+S'Tadas'
+p21
+sa(dp22
+g2
+g3
+sg4
+S'http://blog.bassline.lt/'
+p23
+sg6
+S'friend, contact'
+p24
+sg8
+S'sliekas_kanibalas'
+p25
+sa.

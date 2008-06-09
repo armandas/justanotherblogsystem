@@ -1,7 +1,12 @@
+# -*- coding: UTF-8 -*-
+
 from django.template.loader import get_template
 from django.template import RequestContext
 from django.http import HttpResponseNotFound
 from django.core.urlresolvers import reverse
+
+import pickle
+from os.path import dirname
 
 from blogapp.models import *
 
@@ -51,16 +56,7 @@ def tag_list():
     return cloud
 
 def friends():
-    friends = options()['friends'].split("\r\n") #will be changed to \n when interface is done
-    friends = [friend.split("|", 2) for friend in friends]
-    if len(friends[0]) < 3:
-        return None
-
-    friend_list = []
-
-    #generate list of dictionaries for easy usage in templates
-    for friend in friends:
-        f = {}
-        f['name'], f['uri'], f['rel'] = friend
-        friend_list.append(f)
-    return friend_list
+    f = open(dirname(__file__)+'/friends')
+    friends = pickle.load(f)
+    f.close()
+    return friends
