@@ -3,6 +3,8 @@
 from django import template
 from django.core.urlresolvers import reverse
 
+from blogapp.utilities.friends import rel_decode
+
 register = template.Library()
 
 def dgs(number, word=''):
@@ -39,3 +41,4 @@ def link_tags(taglist):
 register.filter(dgs)
 register.filter(nl2br)
 register.filter(link_tags)
+register.filter(rel_decode)
