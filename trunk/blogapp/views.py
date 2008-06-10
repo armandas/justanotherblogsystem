@@ -3,8 +3,13 @@ from django.shortcuts import render_to_response
 
 from blogapp.models import *
 from blogapp.utilities import *
+from blogapp.forms import CommentForm
 
 BLOG_TPL = 'blog.html'
+
+#def comment(request):
+    #form = CommentForm()
+    #return render_to_response('blank.html', {'source': form.as_p()}, context_instance=RequestContext(request))
 
 def homepage(request):
     posts = Post.objects.all()[:5]
