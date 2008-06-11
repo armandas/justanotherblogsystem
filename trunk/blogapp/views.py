@@ -3,7 +3,7 @@ from django.shortcuts import render_to_response
 
 from blogapp.models import *
 from blogapp.utilities import *
-from blogapp.forms import CommentForm
+#from blogapp.forms import CommentForm
 
 BLOG_TPL = 'blog.html'
 
@@ -49,11 +49,11 @@ def posts_by_date(request, year, month):
 def feed(request, feed_type):
     posts = Post.objects.all()[:10]
     template = "feeds/%s.xml" % feed_type
-    mimetype = "application/%s+xml" % feed_type
+    m_type = "application/xml"#"application/%s+xml" % feed_type
     updated = posts[0].date #used by atom
     context = {
         'posts': posts,
         'updated': updated,
-        'options': options,
+        'options': options(),
         }
-    return render_to_response(template, context, mimetype=mimetype)
+    return render_to_response(template, context, mimetype=m_type)
