@@ -17,7 +17,7 @@ def blog_processor(request):
 
 def not_found(request, title='Error 404', message='Page not found'):
     t = get_template("service/404_message.html")
-    c = RequestContext({'err_title': title, 'err_message': message})
+    c = RequestContext(request, {'err_title': title, 'err_message': message})
     html = t.render(c)
     return HttpResponseNotFound(html)
 
