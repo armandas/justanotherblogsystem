@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load filters %}
+{% load i18n %}
 
 {% block content %}
     <div id="menu">
@@ -22,12 +23,21 @@
 
     <div id="sidebar">
         {% if tags %}
-        <h3>Gairės</h3>
+        <h3>{% trans "Tags" %}</h3>
             <p>{% for tag in tags %}<a href="{{ tag.uri }}" style="font-size: {{ tag.size }}px" title="({{ tag.post_count }})">{{ tag.title }}</a> {% endfor %}</p>
         {% endif %}
 
+        {% if archives %}
+        <h3>{% trans "Archives" %}</h3>
+            <ul>
+                {% for archive in archives %}
+                    <li><a href="{% url blogapp.views.posts_by_date archive.year,archive.month %}">{{ archive.year }} {{ archive.date|date:"F"|month_name }} ({{ archive.post_count }})</a></li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
         {% if friends %}
-        <h3>Draugai</h3>
+        <h3>{% trans "Blogroll" %}</h3>
             <ul>
             {% for friend in friends %}
                 <li><a href="{{ friend.uri }}" rel="{{ friend.rel|rel_decode }}"{% if friend.about %} title="{{ friend.about }}"{% endif %}>{{ friend.name }}</a></li>{% endfor %}

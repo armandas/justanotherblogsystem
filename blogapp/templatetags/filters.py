@@ -2,17 +2,18 @@
 
 from django import template
 from django.core.urlresolvers import reverse
+from django.utils.translation import ugettext as _
 
 from blogapp.utilities.friends import rel_decode
 
 register = template.Library()
 
 def dgs(number, word=''):
-    """Pluralization for Lithuanian
+    """Pluralization for Lithuanian (works partially)
 
        Kaip argumentą pateikite daugiskaitos vardininką
-        - Pvz1: {{ 10|plural:"Komentarai"}}
-        - Pvz2: {{ 21|plural:"Knygos"}}
+        - Pvz1: {{ 10|dgs:"Komentarai"}}
+        - Pvz2: {{ 21|dgs:"Knygos"}}
     """
     if number in range(11,20) or (number % 10) == 0:
         #masculine and feminine forms are the same
@@ -36,9 +37,13 @@ def nl2br(value):
 def link_tags(taglist):
     return ['<a href="%s">%s</a>' % (reverse('blogapp.views.posts_by_tag', args=[tag.name]), tag.title) for tag in taglist]
 
+def month_name(m_name):
+    return _(m_name)
+
 
 #register filters
 register.filter(dgs)
 register.filter(nl2br)
 register.filter(link_tags)
 register.filter(rel_decode)
+register.filter(month_name)
