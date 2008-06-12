@@ -4,6 +4,12 @@ from django.http import HttpResponseNotFound
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
 
+from os.path import dirname
+from os import stat
+from xml.dom import minidom
+from time import time
+from urllib import urlopen
+
 from blogapp.models import *
 from blogapp.utilities import friends
 
@@ -13,6 +19,7 @@ def blog_processor(request):
         'tags': tag_list(),
         'archives': archive(),
         'friends': friends.get_list(),
+        'tracklist': tracklist(),
     }
     return context
 
@@ -72,3 +79,35 @@ def tag_list():
             t['post_count'] = post_count
             cloud.append(t)
     return cloud
+
+def tracklist():
+    """Gets user's tracklist from last.fm feed. Returns a list of dictionarys containing:
+        track.name (title)
+        track.artist
+        track.uri
+    """
+    tracklist = []
+    filepath = dirname(__file__)+'/lastfm.cache'
+    modified_ago = time() - stat(filepath).st_mtime
+
+    #update files older than 15 minutes
+    if modified_ago > 900:
+        remote = urlopen('http://ws.audioscrobbler.com/1.0/user/armandas/recenttracks.xml')
+        content = remote.read()
+        remote.close()
+        #don't "update" cache with nothing
+        if content:
+            local = open(filepath, 'w')
+            local.write(content)
+            local.close()
+
+    x = minidom.parse(filepath)
+    tracks = x.getElementsByTagName('track')
+    if tracks:
+        for track in tracks:
+            t = {}
+            t['name'] = track.getElementsByTagName('name')[0].childNodes[0].nodeValue
+            t['artist'] = track.getElementsByTagName('artist')[0].childNodes[0].nodeValue
+            t['uri'] = track.getElementsByTagName('url')[0].childNodes[0].nodeValue
+            tracklist.append(t)
+    return tracklist
