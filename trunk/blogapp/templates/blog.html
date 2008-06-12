@@ -30,9 +30,9 @@
         {% if archives %}
         <h3>{% trans "Archives" %}</h3>
             <ul>
-                {% for archive in archives %}
-                    <li><a href="{% url blogapp.views.posts_by_date archive.year,archive.month %}">{{ archive.year }} {{ archive.date|date:"F" }} ({{ archive.post_count }})</a></li>
-                {% endfor %}
+            {% for archive in archives %}
+                <li><a href="{% url blogapp.views.posts_by_date archive.year,archive.month %}">{{ archive.year }} {{ archive.date|date:"F" }} ({{ archive.post_count }})</a></li>
+            {% endfor %}
             </ul>
         {% endif %}
 
@@ -40,17 +40,19 @@
         <h3>{% trans "Blogroll" %}</h3>
             <ul>
             {% for friend in friends %}
-                <li><a href="{{ friend.uri }}" rel="{{ friend.rel|rel_decode }}"{% if friend.about %} title="{{ friend.about }}"{% endif %}>{{ friend.name }}</a></li>{% endfor %}
+                <li><a href="{{ friend.uri }}" rel="{{ friend.rel|rel_decode }}"{% if friend.about %} title="{{ friend.about }}"{% endif %}>{{ friend.name }}</a></li>
+            {% endfor %}
             </ul>
         {% endif %}
 
         <h3>Muzika</h3>
             <ul>
-                <li><a href="http://www.last.fm/music/Ed%2BSolo%2B%2526%2BSkool%2Bof%2BThought/_/When+I+Was+A+Yout" title="Ed Solo &amp; Skool of Thought - When I Was A Yout" rel="nofollow">Ed&nbsp;Solo&nbsp;&amp;&nbsp;Skool&nbsp;of&nbsp;Thought&nbsp;-&nbsp;When&nbsp;I&nbsp;Was&nbsp;A&nbsp;Yout</a></li>
-                <li><a href="http://www.last.fm/music/Kondencuotas+Pienas/_/While+You+Were+Dreaming" title="Kondencuotas Pienas - While You Were Dreaming" rel="nofollow">Kondencuotas&nbsp;Pienas&nbsp;-&nbsp;While&nbsp;You&nbsp;Were&nbsp;Dreaming</a></li>
-                <li><a href="http://www.last.fm/music/Airwave/_/Ladyblue+%28Markus+Schulz%27s+Coldharbour+Mix%29" title="Airwave - Ladyblue (Markus Schulz&#039;s Coldharbour Mix)" rel="nofollow">Airwave&nbsp;-&nbsp;Ladyblue&nbsp;(Markus&nbsp;Schulz&#039;s&nbsp;Coldharbour&nbsp;Mix)</a></li>
-                <!--// Update in -1518 seconds. //-->
-                <li><a href="http://www.last.fm/user/armandas/" class="odd" style="text-align: center;" title="Mano last.fm anketa">[žiūrėti daugiau]</a></li>
+            {% if tracklist %}
+                {% for track in tracklist %}
+                <li><a href="{{ track.uri }}" title="{{ track.artist }} ‒ {{ track.name }}" rel="nofollow">{{ track.artist }} ‒ {{ track.name }}</a></li>
+                {% endfor %}
+            {% endif %}
+                <li><a href="http://www.last.fm/user/armandas/" style="text-align: center;" rel="me" title="Mano last.fm anketa">[žiūrėti daugiau]</a></li>
             </ul>
     </div>
     <hr class="hidden">
