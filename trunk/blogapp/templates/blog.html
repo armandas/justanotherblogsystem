@@ -31,7 +31,7 @@
         <h3>{% trans "Archives" %}</h3>
             <ul>
                 {% for archive in archives %}
-                    <li><a href="{% url blogapp.views.posts_by_date archive.year,archive.month %}">{{ archive.year }} {{ archive.date|date:"F"|month_name }} ({{ archive.post_count }})</a></li>
+                    <li><a href="{% url blogapp.views.posts_by_date archive.year,archive.month %}">{{ archive.year }} {{ archive.date|date:"F" }} ({{ archive.post_count }})</a></li>
                 {% endfor %}
             </ul>
         {% endif %}

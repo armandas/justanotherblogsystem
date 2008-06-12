@@ -37,13 +37,9 @@ def nl2br(value):
 def link_tags(taglist):
     return ['<a href="%s">%s</a>' % (reverse('blogapp.views.posts_by_tag', args=[tag.name]), tag.title) for tag in taglist]
 
-def month_name(m_name):
-    return _(m_name)
-
 
 #register filters
 register.filter(dgs)
 register.filter(nl2br)
 register.filter(link_tags)
 register.filter(rel_decode)
-register.filter(month_name)
