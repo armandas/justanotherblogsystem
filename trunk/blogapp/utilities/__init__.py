@@ -2,6 +2,7 @@ from django.template.loader import get_template
 from django.template import RequestContext
 from django.http import HttpResponseNotFound
 from django.core.urlresolvers import reverse
+from django.utils.translation import ugettext as _
 
 from blogapp.models import *
 from blogapp.utilities import friends
@@ -10,12 +11,12 @@ def blog_processor(request):
     context = {
         'options': options(),
         'tags': tag_list(),
-        #'archive': archive(),
+        'archives': archive(),
         'friends': friends.get_list(),
     }
     return context
 
-def not_found(request, title='Error 404', message='Page not found'):
+def not_found(request, title=_('Error 404'), message=_('Page not found')):
     t = get_template("service/404_message.html")
     c = RequestContext(request, {'err_title': title, 'err_message': message})
     html = t.render(c)
@@ -26,6 +27,20 @@ def options():
     opt_list = [(opt.name, opt.value) for opt in Option.objects.all()]
     options = dict(opt_list)
     return options
+
+def archive():
+    p = Post.objects
+    dates = p.dates('date', 'month', order='DESC')
+    archives = []
+    for date in dates:
+        archive = {}
+        archive['date'] = date
+        archive['year'] = date.year
+        archive['month'] = date.month
+        archive['post_count'] = p.filter(date__month=date.month).count()
+        archive['uri'] = reverse('blogapp.views.posts_by_date', args=[date.year, date.month])
+        archives.append(archive)
+    return archives
 
 def tag_list():
     """Returns a list of dictionaries containing:
