@@ -44,7 +44,7 @@ def archive():
         archive['date'] = date
         archive['year'] = date.year
         archive['month'] = date.month
-        archive['post_count'] = p.filter(date__month=date.month).count()
+        archive['post_count'] = p.filter(date__month=date.month, date__year=date.year).count()
         archive['uri'] = reverse('blogapp.views.posts_by_date', args=[date.year, date.month])
         archives.append(archive)
     return archives
