@@ -62,26 +62,25 @@ def tag_list():
 
     tags = Tag.objects.all()
     popular = max([tag.post_set.count() for tag in tags])
+    s_range = max_size - min_size
+    point = s_range / float(popular)
     cloud = []
 
     for tag in tags:
         post_count = tag.post_set.count()
         #only add tags with posts
         if post_count:
-            size = max_size * post_count / popular
-            #sets size to min_size if size < min_size
-            size = (size < min_size) and min_size or size
             t = {}
             t['title'] = tag.title
             t['name'] = tag.name
             t['uri'] = reverse('blogapp.views.posts_by_tag', args=[tag.name])
-            t['size'] = size
+            t['size'] = int(round(min_size + post_count * point))
             t['post_count'] = post_count
             cloud.append(t)
     return cloud
 
 def tracklist():
-    """Gets user's tracklist from last.fm feed. Returns a list of dictionarys containing:
+    """Gets user's tracklist from last.fm feed. Returns a list of dictionaries containing:
         track.name (title)
         track.artist
         track.uri
@@ -92,9 +91,12 @@ def tracklist():
 
     #update files older than 15 minutes
     if modified_ago > 900:
-        remote = urlopen('http://ws.audioscrobbler.com/1.0/user/armandas/recenttracks.xml')
-        content = remote.read()
-        remote.close()
+        try:
+            remote = urlopen('http://ws.audioscrobbler.com/1.0/user/armandas/recenttracks.xml')
+            content = remote.read()
+            remote.close()
+        except:
+            content = None
         #don't "update" cache with nothing
         if content:
             local = open(filepath, 'w')

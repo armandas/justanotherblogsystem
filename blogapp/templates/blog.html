@@ -4,7 +4,7 @@
 
 {% block content %}
     <div id="menu">
-        <a href="{% url blogapp.views.homepage %}">Namai</a>
+        <a href="{% url blogapp.views.homepage %}">{% trans "Home" %}</a>
         <a href="/galerija/">Foto</a>
         <a href="http://feeds.feedburner.com/armandas">RSS</a>
         <a href="http://www.djangoproject.com/"><img src="http://media.djangoproject.com/img/badges/djangosite80x15.gif" border="0" alt="A Django site." title="A Django site." /></a>
@@ -24,7 +24,11 @@
     <div id="sidebar">
         {% if tags %}
         <h3>{% trans "Tags" %}</h3>
-            <p>{% for tag in tags %}<a href="{{ tag.uri }}" style="font-size: {{ tag.size }}px" title="({{ tag.post_count }})">{{ tag.title }}</a> {% endfor %}</p>
+            <p>
+            {% for tag in tags %}
+                <a href="{{ tag.uri }}" style="font-size: {{ tag.size }}px" title="({{ tag.post_count }})">{{ tag.title }}</a>
+            {% endfor %}
+            </p>
         {% endif %}
 
         {% if archives %}
