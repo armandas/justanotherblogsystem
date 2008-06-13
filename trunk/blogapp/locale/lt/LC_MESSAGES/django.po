@@ -44,6 +44,10 @@ msgstr "Atsiprašome, jūsų ieškoma gairė neegzistuoja."
 msgid "Sorry, there are no posts written that month."
 msgstr "Atriprašome, tuo laikotarpiu įrašai nebuvo publikuoti."
 
+#: templates/blog.html:9
+msgid "Home"
+msgstr "Namai"
+
 #: templates/blog.html:25 templates/post.html:6
 msgid "Tags"
 msgstr "Gairės"
