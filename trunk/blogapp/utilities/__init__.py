@@ -29,8 +29,14 @@ def not_found(request, title=_('Error 404'), message=_('Page not found')):
     html = t.render(c)
     return HttpResponseNotFound(html)
 
-def options():
-    """Returns a dictionary of options."""
+def options(opt_name=None):
+    """If name is given, returns the value of an option (empty string if not found).
+    Otherwise, returns a dictionary of options."""
+    if opt_name:
+        try:
+            return Option.objects.get(name=opt_name).value
+        except:
+            return ""
     opt_list = [(opt.name, opt.value) for opt in Option.objects.all()]
     options = dict(opt_list)
     return options
@@ -57,8 +63,8 @@ def tag_list():
         tag.size (for tag cloud)
         tag.post_count
     """
-    max_size = int(options()['tag_cloud_font_size_max'])
-    min_size = int(options()['tag_cloud_font_size_min'])
+    max_size = int(options('tag_cloud_font_size_max'))
+    min_size = int(options('tag_cloud_font_size_min'))
 
     tags = Tag.objects.all()
     popular = max([tag.post_set.count() for tag in tags])
