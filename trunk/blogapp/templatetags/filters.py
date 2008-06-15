@@ -42,12 +42,11 @@ def link_tags(taglist):
     return ['<a href="%s">%s</a>' % (reverse('blogapp.views.posts_by_tag', args=[tag.name]), tag.title) for tag in taglist]
 
 def gravatar(email):
-    size = options('gravatar_size')
-    default = options('default_gravatar_uri')
-    url = "http://www.gravatar.com/avatar.php?gravatar_id=%s&default=%s&size=%s"
-    email = md5(email).hexdigest()
-    default = quote(default, safe='')
-    return url % (email, default, size)
+    gravatar_id = md5(email).hexdigest()
+    gravatar_size = options('gravatar_size')
+    default_uri = quote(options('default_gravatar_uri'), safe='')
+    uri = "http://www.gravatar.com/avatar.php?gravatar_id=%s&size=%s&default=%s"
+    return uri % (gravatar_id, gravatar_size, default_uri)
 
 #register filters
 register.filter(dgs)

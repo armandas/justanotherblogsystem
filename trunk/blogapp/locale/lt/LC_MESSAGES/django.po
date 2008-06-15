@@ -32,6 +32,10 @@ msgstr "Svetainė"
 msgid "Comment"
 msgstr "Komentaras"
 
+#: views.py:25
+msgid "Sorry, the page does not exist."
+msgstr "Atsiprašome, šis puslapis neegzistuoja."
+
 #: views.py:32
 msgid "Sorry, the requested post does not exist."
 msgstr "Atsiprašome, jūsų ieškomas įrašas nerastas."

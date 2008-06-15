@@ -13,7 +13,9 @@ BLOG_TPL = 'blog.html'
     #return render_to_response('blank.html', {'source': form.as_p()}, context_instance=RequestContext(request))
 
 def homepage(request):
-    posts = Post.objects.all()[:5]
+    posts = paged(request, Post.objects.all())
+    if not posts:
+        return not_found(request, message=_("Sorry, the page does not exist."))
     context = {'posts': posts,}
     return render_to_response(BLOG_TPL, context, context_instance=RequestContext(request))
 
@@ -33,15 +35,20 @@ def post_by_name(request, post_name):
 def posts_by_tag(request, tag_name):
     try:
         tag = Tag.objects.get(name=tag_name)
-        posts = tag.post_set.all()[:5]
+        posts = paged(request, tag.post_set.all())
+        if not posts:
+            return not_found(request, message=_("Sorry, the page does not exist."))
         context = {'posts': posts,}
         return render_to_response(BLOG_TPL, context, context_instance=RequestContext(request))
     except:
         return not_found(request, message=_("Sorry, the tag you are searching for does not exist."))
 
 def posts_by_date(request, year, month):
-    posts = Post.objects.filter(date__year=year, date__month=month)[:5]
+    posts = Post.objects.filter(date__year=year, date__month=month)
     if posts:
+        posts = paged(request, posts)
+        if not posts:
+            return not_found(request, message=_("Sorry, the page does not exist."))
         context = {'posts': posts,}
         return render_to_response(BLOG_TPL, context, context_instance=RequestContext(request))
     else:
