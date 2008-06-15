@@ -2,6 +2,7 @@ from django.template.loader import get_template
 from django.template import RequestContext
 from django.http import HttpResponseNotFound
 from django.core.urlresolvers import reverse
+from django.core.paginator import Paginator
 from django.utils.translation import ugettext as _
 
 from os.path import dirname
@@ -40,6 +41,24 @@ def options(opt_name=None):
     opt_list = [(opt.name, opt.value) for opt in Option.objects.all()]
     options = dict(opt_list)
     return options
+
+def paged(request, posts):
+    """Returns post objects for the requested page, or None if page does not exist."""
+    P_LIMIT = int(options('posts_per_page'))
+    page_q = int(request.GET.get('page', 0))
+    pg = Paginator(posts, P_LIMIT)
+    #did user access paged content?
+    if page_q:
+        #is there such a page?
+        if page_q <= pg.num_pages:
+            page = pg.page(page_q)
+            return page.object_list
+        else:
+            #fail
+            return None
+    else:
+        #return first P_LIMIT number of objects if not
+        return posts[:P_LIMIT]
 
 def archive():
     p = Post.objects
