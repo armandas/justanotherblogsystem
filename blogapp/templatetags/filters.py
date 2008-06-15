@@ -4,7 +4,11 @@ from django import template
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
 
+from md5 import md5
+from urllib import quote
+
 from blogapp.utilities.friends import rel_decode
+from blogapp.utilities import options
 
 register = template.Library()
 
@@ -37,9 +41,17 @@ def nl2br(value):
 def link_tags(taglist):
     return ['<a href="%s">%s</a>' % (reverse('blogapp.views.posts_by_tag', args=[tag.name]), tag.title) for tag in taglist]
 
+def gravatar(email):
+    size = options('gravatar_size')
+    default = options('default_gravatar_uri')
+    url = "http://www.gravatar.com/avatar.php?gravatar_id=%s&default=%s&size=%s"
+    email = md5(email).hexdigest()
+    default = quote(default, safe='')
+    return url % (email, default, size)
 
 #register filters
 register.filter(dgs)
 register.filter(nl2br)
 register.filter(link_tags)
-register.filter(rel_decode)
+register.filter(rel_decode) #imported
+register.filter(gravatar)
