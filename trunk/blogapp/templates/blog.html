@@ -19,13 +19,13 @@
         {% include "comments.html" %}
     {% endif %}
 
-    {% if page %}
+    {% if page.has_other_pages %}
         <p align="center">
         {% if page.has_previous %}
-            <a href="?page={{ page.previous_page_number }}">« Newer posts</a>
+            <a href="?page={{ page.previous_page_number }}">« {% trans "Newer posts" %}</a>
         {% endif %}
         {% if page.has_next %}
-            <a href="?page={{ page.next_page_number }}">Older posts »</a>
+            <a href="?page={{ page.next_page_number }}">{% trans "Older posts" %} »</a>
         {% endif %}
         </p>
         <hr class="hidden">
