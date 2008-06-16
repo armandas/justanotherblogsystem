@@ -49,8 +49,8 @@ def gravatar(email):
     return uri % (gravatar_id, gravatar_size, default_uri)
 
 #register filters
+register.filter(rel_decode) #imported
 register.filter(dgs)
 register.filter(nl2br)
 register.filter(link_tags)
-register.filter(rel_decode) #imported
 register.filter(gravatar)

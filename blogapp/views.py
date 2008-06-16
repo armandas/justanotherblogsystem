@@ -2,21 +2,29 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.utils.translation import ugettext as _
 
+from django.core.paginator import Paginator, InvalidPage
+from django.core.exceptions import ObjectDoesNotExist
+
 from blogapp.models import *
 from blogapp.utilities import *
 #from blogapp.forms import CommentForm
 
 BLOG_TPL = 'blog.html'
+P_LIMIT = int(options('posts_per_page'))
 
 #def comment(request):
     #form = CommentForm()
     #return render_to_response('blank.html', {'source': form.as_p()}, context_instance=RequestContext(request))
 
 def homepage(request):
-    posts = paged(request, Post.objects.all())
-    if not posts:
+    pg = Paginator(Post.objects.all(), P_LIMIT)
+    page_q = int(request.GET.get('page', 0)) or 1
+    try:
+        p = pg.page(page_q)
+        posts = p.object_list
+    except InvalidPage:
         return not_found(request, message=_("Sorry, the page does not exist."))
-    context = {'posts': posts,}
+    context = {'posts': posts, 'page': p}
     return render_to_response(BLOG_TPL, context, context_instance=RequestContext(request))
 
 def post_by_name(request, post_name):
@@ -29,27 +37,35 @@ def post_by_name(request, post_name):
             'title': post.title,
             }
         return render_to_response(BLOG_TPL, context, context_instance=RequestContext(request))
-    except:
+    except ObjectDoesNotExist:
         return not_found(request, message=_("Sorry, the requested post does not exist."))
 
 def posts_by_tag(request, tag_name):
     try:
         tag = Tag.objects.get(name=tag_name)
-        posts = paged(request, tag.post_set.all())
-        if not posts:
+        pg = Paginator(tag.post_set.all(), P_LIMIT)
+        page_q = int(request.GET.get('page', 0)) or 1
+        try:
+            p = pg.page(page_q)
+            posts = p.object_list
+        except InvalidPage:
             return not_found(request, message=_("Sorry, the page does not exist."))
-        context = {'posts': posts,}
+        context = {'posts': posts, 'page': p}
         return render_to_response(BLOG_TPL, context, context_instance=RequestContext(request))
-    except:
+    except ObjectDoesNotExist:
         return not_found(request, message=_("Sorry, the tag you are searching for does not exist."))
 
 def posts_by_date(request, year, month):
     posts = Post.objects.filter(date__year=year, date__month=month)
     if posts:
-        posts = paged(request, posts)
-        if not posts:
+        pg = Paginator(posts, P_LIMIT)
+        page_q = int(request.GET.get('page', 0)) or 1
+        try:
+            p = pg.page(page_q)
+            posts = p.object_list
+        except InvalidPage:
             return not_found(request, message=_("Sorry, the page does not exist."))
-        context = {'posts': posts,}
+        context = {'posts': posts, 'page': p}
         return render_to_response(BLOG_TPL, context, context_instance=RequestContext(request))
     else:
         return not_found(request, message=_("Sorry, there are no posts written that month."))

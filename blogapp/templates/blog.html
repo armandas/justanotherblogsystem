@@ -19,6 +19,18 @@
         {% include "comments.html" %}
     {% endif %}
 
+    {% if page %}
+        <p align="center">
+        {% if page.has_previous %}
+            <a href="?page={{ page.previous_page_number }}">« Newer posts</a>
+        {% endif %}
+        {% if page.has_next %}
+            <a href="?page={{ page.next_page_number }}">Older posts »</a>
+        {% endif %}
+        </p>
+        <hr class="hidden">
+    {% endif %}
+
     {% block source %}{% endblock %}
 
     <div id="sidebar">
