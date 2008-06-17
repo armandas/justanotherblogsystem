@@ -4,6 +4,6 @@
         <h2><a href="{% url blogapp.views.homepage %}{{ post.name }}.html">{{ post.title }}</a></h2>
         <small>{% trans "Posted" %} {{ post.date|date:"Y-m-d, H:i" }} | <a href="{% url blogapp.views.homepage %}{{post.name}}.html#comments">{{ post.comment_set.all.count|dgs:"Komentarai" }}</a></small>
         {{ post.content|safe }}
-    <p><small>{% trans "Tags" %}: [{{ post.tags.all|link_tags|join:", "|safe }}]</small></p>
+    <p><small>{% trans "Tags" %}: {{ post.tags.all|link_tags|join:", "|safe }}</small></p>
     </div>
     <hr class="hidden">

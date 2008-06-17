@@ -3,73 +3,83 @@
 {% load i18n %}
 
 {% block content %}
-    <div id="menu">
-        <a href="{% url blogapp.views.homepage %}">{% trans "Home" %}</a>
-        <a href="/galerija/">Foto</a>
-        <a href="http://feeds.feedburner.com/armandas">RSS</a>
-        <a href="http://www.djangoproject.com/"><img src="http://media.djangoproject.com/img/badges/djangosite80x15.gif" border="0" alt="A Django site." title="A Django site." /></a>
-    </div>
-    <hr class="hidden">
+    <div id="top">
+        <div id="header">
+            <h1><span>Armando foto+blogas</span></h1>
+        </div>
 
-    {% for post in posts %}
-        {% include "post.html" %}
-    {% endfor %}
-
-    {% if comments %}
-        {% include "comments.html" %}
-    {% endif %}
-
-    {% if page.has_other_pages %}
-        <p align="center">
-        {% if page.has_previous %}
-            <a href="?page={{ page.previous_page_number }}">« {% trans "Newer posts" %}</a>
-        {% endif %}
-        {% if page.has_next %}
-            <a href="?page={{ page.next_page_number }}">{% trans "Older posts" %} »</a>
-        {% endif %}
-        </p>
+        <div id="menu">
+            <a href="{% url blogapp.views.homepage %}">{% trans "Home" %}</a>
+            <a href="/galerija/">Foto</a>
+            <a href="http://feeds.feedburner.com/armandas">RSS</a>
+            <!--<a href="http://www.djangoproject.com/"><img src="index_files/djangosite80x15.gif" alt="A Django site." title="A Django site."></a>-->
+        </div>
         <hr class="hidden">
-    {% endif %}
+    </div>
 
-    {% block source %}{% endblock %}
-
-    <div id="sidebar">
-        {% if tags %}
-        <h3>{% trans "Tags" %}</h3>
-            <p>
-            {% for tag in tags %}
-                <a href="{{ tag.uri }}" style="font-size: {{ tag.size }}px" title="({{ tag.post_count }})">{{ tag.title }}</a>
+    <div id="container">
+        <div id="content">
+            {% for post in posts %}
+                {% include "post.html" %}
             {% endfor %}
-            </p>
-        {% endif %}
 
-        {% if archives %}
-        <h3>{% trans "Archives" %}</h3>
-            <ul>
-            {% for archive in archives %}
-                <li><a href="{% url blogapp.views.posts_by_date archive.year,archive.month %}">{{ archive.year }} {{ archive.date|date:"F" }} ({{ archive.post_count }})</a></li>
-            {% endfor %}
-            </ul>
-        {% endif %}
-
-        {% if friends %}
-        <h3>{% trans "Blogroll" %}</h3>
-            <ul>
-            {% for friend in friends %}
-                <li><a href="{{ friend.uri }}" rel="{{ friend.rel|rel_decode }}"{% if friend.about %} title="{{ friend.about }}"{% endif %}>{{ friend.name }}</a></li>
-            {% endfor %}
-            </ul>
-        {% endif %}
-
-        <h3>Muzika</h3>
-            <ul>
-            {% if tracklist %}
-                {% for track in tracklist %}
-                <li><a href="{{ track.uri }}" title="{{ track.artist }} ‒ {{ track.name }}" rel="nofollow">{{ track.artist }} ‒ {{ track.name }}</a></li>
-                {% endfor %}
+            {% if comment_form %}
+                {% include "comments.html" %}
             {% endif %}
-                <li><a href="http://www.last.fm/user/armandas/" style="text-align: center;" rel="me" title="Mano last.fm anketa">[žiūrėti daugiau]</a></li>
-            </ul>
+
+            {% if page.has_other_pages %}
+                <p id="pagination">
+                {% if page.has_previous %}
+                    <a href="?page={{ page.previous_page_number }}" id="prev_page">« {% trans "Newer posts" %}</a>
+                {% endif %}
+                {% if page.has_next %}
+                    <a href="?page={{ page.next_page_number }}" id="next_page">{% trans "Older posts" %} »</a>
+                {% endif %}
+                </p>
+                <hr class="hidden">
+            {% endif %}
+
+            {% block source %}{% endblock %}
+        </div>
+
+        <div id="sidebar">
+            {% if tags %}
+            <h3>{% trans "Tags" %}</h3>
+                <p>
+                {% for tag in tags %}
+                    <a href="{{ tag.uri }}" style="font-size: {{ tag.size }}px" title="({{ tag.post_count }})">{{ tag.title }}</a>
+                {% endfor %}
+                </p>
+            {% endif %}
+
+            {% if archives %}
+            <h3>{% trans "Archives" %}</h3>
+                <ul>
+                {% for archive in archives %}
+                    <li><a href="{% url blogapp.views.posts_by_date archive.year,archive.month %}">{{ archive.year }} {{ archive.date|date:"F" }} ({{ archive.post_count }})</a></li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+
+            {% if friends %}
+            <h3>{% trans "Blogroll" %}</h3>
+                <ul>
+                {% for friend in friends %}
+                    <li><a href="{{ friend.uri }}" rel="{{ friend.rel|rel_decode }}"{% if friend.about %} title="{{ friend.about }}"{% endif %}>{{ friend.name }}</a></li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+
+            <h3>Muzika</h3>
+                <ul>
+                {% if tracklist %}
+                    {% for track in tracklist %}
+                    <li><a href="{{ track.uri }}" title="{{ track.artist }} ‒ {{ track.name }}" rel="nofollow">{{ track.artist }} ‒ {{ track.name }}</a></li>
+                    {% endfor %}
+                {% endif %}
+                    <li><a href="http://www.last.fm/user/armandas/" style="text-align: center;" rel="me" title="Mano last.fm anketa">[žiūrėti daugiau]</a></li>
+                </ul>
+        </div>
     </div>
     <hr class="hidden">
 {% endblock %}
