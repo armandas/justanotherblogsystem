@@ -17,9 +17,9 @@
         {% endfor %}
         <hr class="hidden">
 
-        <form method="POST" action="">
+        <form method="POST" action="" id="comment_form">
             {{ comment_form.as_p }}
-            <input type="submit" name="post" value="{% trans "Post comment" %}">
+            <p><input type="submit" name="post" value="{% trans "Post comment" %}"></p>
         </form>
         <hr class="hidden">
     </div>
