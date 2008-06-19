@@ -5,7 +5,6 @@ from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
 from django.utils.html import escape
 
-
 from os.path import dirname
 from os import stat
 from xml.dom import minidom

@@ -44,9 +44,10 @@ def link_tags(taglist):
 def gravatar(email):
     gravatar_id = md5(email).hexdigest()
     gravatar_size = options('gravatar_size')
-    default_uri = quote(options('default_gravatar_uri'), safe='')
+    #possible values for default are: identicon, monsterid, wavatar, uri of an image
+    default = quote(options('default_gravatar'), safe='')
     uri = "http://www.gravatar.com/avatar.php?gravatar_id=%s&size=%s&default=%s"
-    return uri % (gravatar_id, gravatar_size, default_uri)
+    return uri % (gravatar_id, gravatar_size, default)
 
 #register filters
 register.filter(rel_decode) #imported

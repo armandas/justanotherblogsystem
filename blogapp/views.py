@@ -3,7 +3,6 @@ from django.template import RequestContext
 from django.utils.translation import ugettext as _
 from django.core.paginator import Paginator, InvalidPage
 from django.core.exceptions import ObjectDoesNotExist
-from django.core.urlresolvers import reverse
 
 from blogapp.models import *
 from blogapp.utilities import *
