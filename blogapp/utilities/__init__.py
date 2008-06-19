@@ -1,17 +1,21 @@
 from django.template.loader import get_template
 from django.template import RequestContext
-from django.http import HttpResponseNotFound
+from django.http import HttpResponseNotFound, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
+from django.utils.html import escape
+
 
 from os.path import dirname
 from os import stat
 from xml.dom import minidom
 from time import time
 from urllib import urlopen
+from datetime import datetime
 
 from blogapp.models import *
 from blogapp.utilities import friends
+from blogapp.utilities.akismet import *
 
 def blog_processor(request):
     context = {
@@ -40,6 +44,48 @@ def options(opt_name=None):
     opt_list = [(opt.name, opt.value) for opt in Option.objects.all()]
     options = dict(opt_list)
     return options
+
+def process_comment(request, post, form):
+
+    author = form.cleaned_data['author_name']
+    email = form.cleaned_data['author_email']
+    website = form.cleaned_data.get('author_website', '')
+    ip = request.META['REMOTE_ADDR']
+    comment = form.cleaned_data['comment']
+
+    has_comments = Comment.objects.filter(author_email=email, comment_type='comment').count()
+    if has_comments:
+        #skip "approved" commenters
+        comment_type = 'comment'
+    else:
+        api = Akismet(key=options('akismet_api_key'), blog_url=options('base_url'), agent='justanotherblogsystem')
+        if api.verify_key():
+            data = {}
+            data['comment_author'] = author
+            data['comment_content'] = comment
+            data['user_ip'] = ip
+            data['user_agent'] = request.META['HTTP_USER_AGENT']
+            data['comment_author_email'] = email
+
+            if api.comment_check(comment, data):
+                comment_type = 'spam'
+            else:
+                #mark for moderation
+                comment_type = 'unread'
+        else:
+            raise APIKeyError("Your akismet key is invalid.")
+
+    #save comment
+    p = Comment(author_name=escape(author),
+            author_email=escape(email),
+            author_website=escape(website),
+            content=escape(comment),
+            date=datetime.now(),
+            author_ip=ip,
+            post=post,
+            comment_type=comment_type)
+    p.save()
+    return HttpResponseRedirect(reverse('blogapp.views.post_by_name', args=[post.name]))
 
 def archive():
     p = Post.objects

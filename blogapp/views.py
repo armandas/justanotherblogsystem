@@ -1,8 +1,6 @@
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-from django.http import HttpResponseRedirect
 from django.utils.translation import ugettext as _
-from django.utils.html import escape
 from django.core.paginator import Paginator, InvalidPage
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
@@ -10,8 +8,6 @@ from django.core.urlresolvers import reverse
 from blogapp.models import *
 from blogapp.utilities import *
 from blogapp.forms import CommentForm
-
-from datetime import datetime
 
 BLOG_TPL = 'blog.html'
 P_LIMIT = int(options('posts_per_page'))
@@ -36,20 +32,11 @@ def post_by_name(request, post_name):
     if request.method == 'POST':
         form = CommentForm(request.POST)
         if form.is_valid():
-            p = Comment(author_name=form.cleaned_data['author_name'],
-                        author_email=form.cleaned_data['author_email'],
-                        author_website=form.cleaned_data.get('author_website', ''),
-                        content=escape(form.cleaned_data['comment']),
-                        date=datetime.now(),
-                        author_ip=request.META['REMOTE_ADDR'],
-                        post=post
-                        )
-            p.save()
-            return HttpResponseRedirect(reverse('blogapp.views.post_by_name', args=[post.name]))
+            return process_comment(request, post, form)
     else:
         form = CommentForm()
 
-    comments = post.comment_set.all()
+    comments = post.comment_set.filter(comment_type='comment')
     context = {
         'posts': [post],
         'comments': comments,
