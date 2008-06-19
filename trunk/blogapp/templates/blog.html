@@ -17,6 +17,7 @@
         <hr class="hidden">
     </div>
 
+<div id="wrapper">
     <div id="container">
         <div id="content">
             {% for post in posts %}
@@ -45,7 +46,7 @@
         <div id="sidebar">
             {% if tags %}
             <h3>{% trans "Tags" %}</h3>
-                <p>
+                <p style="text-align: center">
                 {% for tag in tags %}
                     <a href="{{ tag.uri }}" style="font-size: {{ tag.size }}px" title="({{ tag.post_count }})">{{ tag.title }}</a>
                 {% endfor %}
@@ -81,5 +82,6 @@
                 </ul>
         </div>
     </div>
+</div>
     <hr class="hidden">
 {% endblock %}

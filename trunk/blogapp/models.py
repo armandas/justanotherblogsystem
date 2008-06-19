@@ -9,7 +9,7 @@ class Tag(models.Model):
         return self.name
 
     class Admin:
-        pass
+        list_per_page = 15
 
 class Post(models.Model):
     title = models.CharField(max_length=256)
@@ -27,6 +27,7 @@ class Post(models.Model):
         list_filter = ('tags',)
         ordering = ('-date',)
         search_fields = ('title', 'content')
+        list_per_page = 15
 
     class Meta:
         ordering = ["-date"]
@@ -43,22 +44,32 @@ class Meta(models.Model):
     photo = models.OneToOneField(Post)
 
     class Admin:
-        pass
+        list_per_page = 15
 
 class Comment(models.Model):
-    author_name = models.CharField(max_length=32)
+
+    TYPE_CHOICES = (
+        ('comment', 'comment'),
+        ('unread', 'unread'),
+        ('spam', 'spam'),
+        ('trackback', 'trackback'),
+    )
+
+    author_name = models.CharField(max_length=48)
     author_email = models.EmailField()
-    author_website = models.URLField()
+    author_website = models.URLField(blank=True)
     author_ip = models.IPAddressField()
     date = models.DateTimeField()
     post = models.ForeignKey(Post)
     content = models.TextField(max_length=2048)
+    comment_type = models.TextField(max_length=10, choices=TYPE_CHOICES)
 
     class Admin:
-        list_display = ('author_name', 'content', 'date')
-        list_filter = ('post',)
+        list_display = ('author_name', 'content', 'post', 'date', 'comment_type')
+        list_filter = ('comment_type', 'post')
         ordering = ('-date',)
         search_fields = ('author_name', 'author_email', 'author_website', 'author_ip' 'content')
+        list_per_page = 15
 
     class Meta:
         ordering = ["date"]
@@ -71,3 +82,4 @@ class Option(models.Model):
         list_display = ('name', 'value')
         ordering = ('name',)
         search_fields = ('name', 'value')
+        list_per_page = 15
