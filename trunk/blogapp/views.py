@@ -33,7 +33,7 @@ def post_by_name(request, post_name):
         if form.is_valid():
             return process_comment(request, post, form)
     else:
-        form = CommentForm()
+        form = CommentForm(request.COOKIES)
 
     comments = post.comment_set.filter(comment_type='comment')
     context = {

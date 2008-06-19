@@ -3,7 +3,6 @@ from django.template import RequestContext
 from django.http import HttpResponseNotFound, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
-from django.utils.html import escape
 
 from os.path import dirname
 from os import stat
@@ -44,6 +43,9 @@ def options(opt_name=None):
     options = dict(opt_list)
     return options
 
+def escape(value):
+    return value.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;').replace("'", '&#39;')
+
 def process_comment(request, post, form):
 
     author = form.cleaned_data['author_name']
@@ -74,9 +76,17 @@ def process_comment(request, post, form):
         else:
             raise APIKeyError("Your akismet key is invalid.")
 
+    #define a response
+    response = HttpResponseRedirect(reverse('blogapp.views.post_by_name', args=[post.name]))
+    #remember user's data
+    response.set_cookie('author_name', author, max_age=60*60*24*30)
+    response.set_cookie('author_email', email, max_age=60*60*24*30)
+    if website:
+        response.set_cookie('author_website', website, max_age=60*60*24*30)
+
     #save comment
     p = Comment(author_name=escape(author),
-            author_email=escape(email),
+            author_email=email,
             author_website=escape(website),
             content=escape(comment),
             date=datetime.now(),
@@ -84,7 +94,7 @@ def process_comment(request, post, form):
             post=post,
             comment_type=comment_type)
     p.save()
-    return HttpResponseRedirect(reverse('blogapp.views.post_by_name', args=[post.name]))
+    return response
 
 def archive():
     p = Post.objects
