@@ -44,6 +44,7 @@ def options(opt_name=None):
     return options
 
 def escape(value):
+    """This function is based on django.utils.html.escape, but doesn't have issues with unicode."""
     return value.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;').replace("'", '&#39;')
 
 def process_comment(request, post, form):
@@ -71,8 +72,7 @@ def process_comment(request, post, form):
             if api.comment_check(comment, data):
                 comment_type = 'spam'
             else:
-                #mark for moderation
-                comment_type = 'unread'
+                comment_type = 'comment'
         else:
             raise APIKeyError("Your akismet key is invalid.")
 
