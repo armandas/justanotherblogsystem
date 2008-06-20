@@ -12,6 +12,9 @@ from blogapp.utilities import options
 
 register = template.Library()
 
+def count_comments(post):
+    return post.comment_set.filter(comment_type='comment').count()
+
 def dgs(number, word=''):
     """Pluralization for Lithuanian (works partially)
 
@@ -51,6 +54,7 @@ def gravatar(email):
 
 #register filters
 register.filter(rel_decode) #imported
+register.filter(count_comments)
 register.filter(dgs)
 register.filter(nl2br)
 register.filter(link_tags)

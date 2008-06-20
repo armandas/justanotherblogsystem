@@ -6,8 +6,12 @@
     <meta name="Author" content="{{ options.blog_author }}">
     <meta name="Description" content="{{ options.blog_description }}">
     <meta name="robots" content="index, follow">
+    {% if options.feed_url %}
+    <link rel="alternate" type="application/rss+xml" title="Blog feed (RSS)" href="{{ options.feed_url }}">
+    {% else %}
     <link rel="alternate" type="application/rss+xml" title="Blog feed (RSS)" href="{% url blogapp.views.feed "rss" %}">
     <link rel="alternate" type="application/atom+xml" title="Blog feed (Atom)" href="{% url blogapp.views.feed "atom" %}">
+    {% endif %}
     <link rel="shortcut icon" href="favicon.ico">
     <link rel="stylesheet" type="text/css" href="css/print.css" media="print">
     <link rel="openid.server" href="http://www.myopenid.com/server">
