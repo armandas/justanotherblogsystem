@@ -52,13 +52,13 @@ class Comment(models.Model):
         ('comment', 'comment'),
         ('unread', 'unread'),
         ('spam', 'spam'),
-        ('trackback', 'trackback'),
+        ('linkback', 'linkback'),
     )
 
     author_name = models.CharField(max_length=48)
-    author_email = models.EmailField()
+    author_email = models.EmailField(blank=True)
     author_website = models.URLField(blank=True)
-    author_ip = models.IPAddressField()
+    author_ip = models.IPAddressField(blank=True, null=True)
     date = models.DateTimeField()
     post = models.ForeignKey(Post)
     content = models.TextField(max_length=2048)

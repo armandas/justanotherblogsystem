@@ -35,7 +35,8 @@ def post_by_name(request, post_name):
     else:
         form = CommentForm(request.COOKIES)
 
-    comments = post.comment_set.filter(comment_type='comment')
+    #takes comments where comment_type is 'comment' or 'linkback'
+    comments = post.comment_set.filter(comment_type='comment') | post.comment_set.filter(comment_type='linkback')
     context = {
         'posts': [post],
         'comments': comments,
@@ -47,17 +48,17 @@ def post_by_name(request, post_name):
 def posts_by_tag(request, tag_name):
     try:
         tag = Tag.objects.get(name=tag_name)
-        pg = Paginator(tag.post_set.all(), P_LIMIT)
-        page_q = int(request.GET.get('page', 0)) or 1
-        try:
-            p = pg.page(page_q)
-            posts = p.object_list
-        except InvalidPage:
-            return not_found(request, message=_("Sorry, the page does not exist."))
-        context = {'posts': posts, 'page': p}
-        return render_to_response(BLOG_TPL, context, context_instance=RequestContext(request))
     except ObjectDoesNotExist:
         return not_found(request, message=_("Sorry, the tag you are searching for does not exist."))
+    pg = Paginator(tag.post_set.all(), P_LIMIT)
+    page_q = int(request.GET.get('page', 0)) or 1
+    try:
+        p = pg.page(page_q)
+        posts = p.object_list
+    except InvalidPage:
+        return not_found(request, message=_("Sorry, the page does not exist."))
+    context = {'posts': posts, 'page': p}
+    return render_to_response(BLOG_TPL, context, context_instance=RequestContext(request))
 
 def posts_by_date(request, year, month):
     posts = Post.objects.filter(date__year=year, date__month=month)

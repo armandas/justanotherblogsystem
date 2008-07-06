@@ -3,17 +3,30 @@
     <h3 id="comments_title"{% if photo%} onclick="toggleComments()"{% endif %}><a name="comments">{{ comments.count|dgs:"Komentarai" }}</a></h3>
     <div id="comments">
         {% for comment in comments %}
-        <hr class="hidden">
-        <div class="comment">
-            <div class="name">
-                <img src="{{ comment.author_email|gravatar }}" alt="{{ comment.author_name }}">
-                <h4>{% if comment.author_website %}<a href="{{ comment.author_website }}">{{ comment.author_name|safe }}</a>{% else %}{{ comment.author_name|safe }}{% endif %}</h4>
-                <small class="date"><em>{{ comment.date|date:"Y-m-d, H:i" }}</em></small>
-            </div>
-            <div class="text">
-                {% autoescape off %}<p>{{ comment.content|urlize|nl2br }}</p>{% endautoescape %}
-            </div>
-        </div>
+            {% ifequal comment.comment_type "linkback" %}
+                <hr class="hidden">
+                <div class="comment">
+                    <div class="name">
+                        <h4>{% if comment.author_website %}<a href="{{ comment.author_website }}">{{ comment.author_name|safe }}</a>{% else %}{{ comment.author_name|safe }}{% endif %}</h4>
+                        <small class="date"><em>{{ comment.date|date:"Y-m-d, H:i" }}</em></small>
+                    </div>
+                    <div class="text">
+                        {% autoescape off %}<p>{{ comment.content|urlize|nl2br }}</p>{% endautoescape %}
+                    </div>
+                </div>
+            {% else %}
+                <hr class="hidden">
+                <div class="comment">
+                    <div class="name">
+                        <img src="{{ comment.author_email|gravatar }}" alt="{{ comment.author_name }}">
+                        <h4>{% if comment.author_website %}<a href="{{ comment.author_website }}">{{ comment.author_name|safe }}</a>{% else %}{{ comment.author_name|safe }}{% endif %}</h4>
+                        <small class="date"><em>{{ comment.date|date:"Y-m-d, H:i" }}</em></small>
+                    </div>
+                    <div class="text">
+                        {% autoescape off %}<p>{{ comment.content|urlize|nl2br }}</p>{% endautoescape %}
+                    </div>
+                </div>
+            {% endifequal %}
         {% endfor %}
         <hr class="hidden">
 

@@ -7,3 +7,7 @@ urlpatterns = patterns('blogapp.views',
     (r'^archive/([0-9]{4})/([0-9]{1,2})/$', 'posts_by_date'),
     (r'feed/(rss|atom)/$', 'feed'),
 )
+
+urlpatterns += patterns('blogapp.utilities',
+    (r'xmlrpc/$', 'django_xmlrpc.handle_xmlrpc'),
+)
