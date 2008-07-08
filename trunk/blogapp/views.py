@@ -34,11 +34,12 @@ def post_by_name(request, post_name):
             #result will either be a http redirect or an error string
             result = process_comment(request, post, form)
             if isinstance(result, unicode):
-                unpickle_cookies(request)
-                form = CommentForm(request.COOKIES, auto_id=False)
+                form = CommentForm(request.POST, auto_id=False)
                 form.errors['generic'] = result
             else:
                 return result
+        else:
+            form.errors['generic'] = _("Check that the required fields are filled in correctly.")
     else:
         #values are pickled to enable unicode strings to be stored
         unpickle_cookies(request)
