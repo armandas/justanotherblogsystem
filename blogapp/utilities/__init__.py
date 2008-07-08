@@ -69,25 +69,26 @@ def process_comment(request, post, form):
     comment = form.cleaned_data['comment'].strip()
 
     #anti-flood and anti-repost
-    c = Comment.objects.filter(author_email=email).order_by('-date')
-    if c:
-        c = c[0]
+    has_comments = Comment.objects.filter(author_email=email).order_by('-date')
+    if has_comments:
+        #take newest
+        c = has_comments[0]
         diff = datetime.now() - c.date
         if diff.seconds < 60:
             return _("You're too fast. Wait for 60 seconds.")
         elif c.content == comment and c.post.name == post.name:
             return _("It looks like you've just said that.")
 
-    has_comments = Comment.objects.filter(author_email=email, comment_type='comment').count()
-    if has_comments:
+    has_approved_comments = has_comments.filter(comment_type='comment').count()
+    if has_approved_comments:
         #skip "approved" commenters
         comment_type = 'comment'
     else:
         api = Akismet(key=options('akismet_api_key'), blog_url=options('base_url'), agent='justanotherblogsystem')
         if api.verify_key():
             data = {}
-            data['comment_author'] = author.encode("ASCII", "replace")
-            data['comment_content'] = comment.encode("ASCII", "replace")
+            data['comment_author'] = author.encode('ASCII', 'replace')
+            data['comment_content'] = comment.encode('ASCII', 'replace')
             data['user_ip'] = ip
             data['user_agent'] = request.META['HTTP_USER_AGENT']
             data['comment_author_email'] = email
