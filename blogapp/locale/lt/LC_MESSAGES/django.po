@@ -40,6 +40,10 @@ msgstr "Atsiprašome, šis puslapis neegzistuoja."
 msgid "Sorry, the requested post does not exist."
 msgstr "Atsiprašome, jūsų ieškomas įrašas nerastas."
 
+#: views.py:42
+msgid "Check that the required fields are filled in correctly."
+msgstr "Patikrinkite ar teisingai užpildėte reikiamus laukus."
+
 #: views.py:56
 msgid "Sorry, the tag you are searching for does not exist."
 msgstr "Atsiprašome, jūsų ieškoma gairė neegzistuoja."
