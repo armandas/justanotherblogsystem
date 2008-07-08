@@ -31,11 +31,18 @@ def post_by_name(request, post_name):
     if request.method == 'POST':
         form = CommentForm(request.POST)
         if form.is_valid():
-            return process_comment(request, post, form)
+            #result will either be a http redirect or an error string
+            result = process_comment(request, post, form)
+            if isinstance(result, unicode):
+                unpickle_cookies(request)
+                form = CommentForm(request.COOKIES, auto_id=False)
+                form.errors['generic'] = result
+            else:
+                return result
     else:
         #values are pickled to enable unicode strings to be stored
         unpickle_cookies(request)
-        form = CommentForm(request.COOKIES)
+        form = CommentForm(request.COOKIES, auto_id=False)
 
     #takes comments where comment_type is 'comment' or 'linkback'
     comments = post.comment_set.filter(comment_type='comment') | post.comment_set.filter(comment_type='linkback')
