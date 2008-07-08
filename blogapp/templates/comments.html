@@ -31,6 +31,10 @@
         <hr class="hidden">
 
         <form method="POST" action="" id="comment_form">
+            {% if comment_form.errors.generic %}
+                <div id="form_error">{{ comment_form.errors.generic }}</div>
+            {% endif %}
+
             {% for field in comment_form %}
                 <p><label>{{ field.label }}{% if field.field.required %} <em>*</em>{% endif %}<br>{{ field }}</label></p>
             {% endfor %}

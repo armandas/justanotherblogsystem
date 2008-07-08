@@ -88,6 +88,14 @@ msgstr "Klaida: 404"
 msgid "Page not found"
 msgstr "Puslapis nerastas"
 
+#: utilities/__init__.py:76
+msgid "You're too fast. Wait for 60 seconds."
+msgstr "Išlaikykite 60s. pauzę tarp komentarų."
+
+#: utilities/__init__.py:78
+msgid "It looks like you've just said that."
+msgstr "Atrodo, jog jūs katik rašėtė tą patį."
+
 msgid "January"
 msgstr "Sausis"
 

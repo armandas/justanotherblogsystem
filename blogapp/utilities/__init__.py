@@ -3,6 +3,7 @@ from django.template import RequestContext
 from django.http import HttpResponseNotFound, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
+from django.newforms import ValidationError
 
 from os.path import dirname
 from os import stat
@@ -57,28 +58,24 @@ def unpickle_cookies(request):
 
 def process_comment(request, post, form):
     """ Processes a comment (anti-flood, anti-repost, amti-spam).
-        TODO:
-            - error messages;
+        Returns a HTTP Redirect or an error string.
     """
 
     #gather the data
-    author = form.cleaned_data['author_name']
-    email = form.cleaned_data['author_email']
-    website = form.cleaned_data.get('author_website', '')
+    author = form.cleaned_data['author_name'].strip()
+    email = form.cleaned_data['author_email'].strip()
+    website = form.cleaned_data.get('author_website', '').strip()
     ip = request.META['REMOTE_ADDR']
-    comment = form.cleaned_data['comment']
-
-    #define a response
-    response = HttpResponseRedirect(reverse('blogapp.views.post_by_name', args=[post.name]))
+    comment = form.cleaned_data['comment'].strip()
 
     #anti-flood and anti-repost
     c = Comment.objects.filter(author_email=email).order_by('-date')[0]
     if c:
         diff = datetime.now() - c.date
         if diff.seconds < 60:
-            return response
-        elif c.content == comment:
-            return response
+            return _("You're too fast. Wait for 60 seconds.")
+        elif c.content == comment and c.post.name == post.name:
+            return _("It looks like you've just said that.")
 
     has_comments = Comment.objects.filter(author_email=email, comment_type='comment').count()
     if has_comments:
@@ -100,6 +97,9 @@ def process_comment(request, post, form):
                 comment_type = 'comment'
         else:
             raise APIKeyError("Your akismet key is invalid.")
+
+    #define a response
+    response = HttpResponseRedirect(reverse('blogapp.views.post_by_name', args=[post.name]))
 
     #remember user's data (pickled)
     response.set_cookie('author_name', pickle.dumps(author), max_age=60*60*24*30)
