@@ -69,8 +69,9 @@ def process_comment(request, post, form):
     comment = form.cleaned_data['comment'].strip()
 
     #anti-flood and anti-repost
-    c = Comment.objects.filter(author_email=email).order_by('-date')[0]
+    c = Comment.objects.filter(author_email=email).order_by('-date')
     if c:
+        c = c[0]
         diff = datetime.now() - c.date
         if diff.seconds < 60:
             return _("You're too fast. Wait for 60 seconds.")
