@@ -33,6 +33,8 @@ def post_by_name(request, post_name):
         if form.is_valid():
             return process_comment(request, post, form)
     else:
+        #values are pickled to enable unicode strings to be stored
+        unpickle_cookies(request)
         form = CommentForm(request.COOKIES)
 
     #takes comments where comment_type is 'comment' or 'linkback'
