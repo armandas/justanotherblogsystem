@@ -10,6 +10,7 @@ from xml.dom import minidom
 from time import time
 from urllib import urlopen
 from datetime import datetime
+import pickle
 
 from blogapp.models import *
 from blogapp.utilities import friends
@@ -47,6 +48,13 @@ def escape(value):
     """This function is based on django.utils.html.escape, but doesn't have issues with unicode."""
     return value.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;').replace("'", '&#39;')
 
+def unpickle_cookies(request):
+    for cookie in request.COOKIES:
+        try:
+            request.COOKIES[cookie] = pickle.loads(request.COOKIES[cookie])
+        except:
+            request.COOKIES[cookie] = ''
+
 def process_comment(request, post, form):
 
     author = form.cleaned_data['author_name']
@@ -63,8 +71,8 @@ def process_comment(request, post, form):
         api = Akismet(key=options('akismet_api_key'), blog_url=options('base_url'), agent='justanotherblogsystem')
         if api.verify_key():
             data = {}
-            data['comment_author'] = author
-            data['comment_content'] = comment
+            data['comment_author'] = author.encode("ASCII", "replace")
+            data['comment_content'] = comment.encode("ASCII", "replace")
             data['user_ip'] = ip
             data['user_agent'] = request.META['HTTP_USER_AGENT']
             data['comment_author_email'] = email
@@ -78,11 +86,12 @@ def process_comment(request, post, form):
 
     #define a response
     response = HttpResponseRedirect(reverse('blogapp.views.post_by_name', args=[post.name]))
-    #remember user's data
-    response.set_cookie('author_name', author, max_age=60*60*24*30)
-    response.set_cookie('author_email', email, max_age=60*60*24*30)
+
+    #remember user's data (pickled)
+    response.set_cookie('author_name', pickle.dumps(author), max_age=60*60*24*30)
+    response.set_cookie('author_email', pickle.dumps(email), max_age=60*60*24*30)
     if website:
-        response.set_cookie('author_website', website, max_age=60*60*24*30)
+        response.set_cookie('author_website', pickle.dumps(website), max_age=60*60*24*30)
 
     #save comment
     p = Comment(author_name=escape(author),
