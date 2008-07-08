@@ -56,12 +56,29 @@ def unpickle_cookies(request):
             request.COOKIES[cookie] = ''
 
 def process_comment(request, post, form):
+    """ Processes a comment (anti-flood, anti-repost, amti-spam).
+        TODO:
+            - error messages;
+    """
 
+    #gather the data
     author = form.cleaned_data['author_name']
     email = form.cleaned_data['author_email']
     website = form.cleaned_data.get('author_website', '')
     ip = request.META['REMOTE_ADDR']
     comment = form.cleaned_data['comment']
+
+    #define a response
+    response = HttpResponseRedirect(reverse('blogapp.views.post_by_name', args=[post.name]))
+
+    #anti-flood and anti-repost
+    c = Comment.objects.filter(author_email=email).order_by('-date')[0]
+    if c:
+        diff = datetime.now() - c.date
+        if diff.seconds < 60:
+            return response
+        elif c.content == comment:
+            return response
 
     has_comments = Comment.objects.filter(author_email=email, comment_type='comment').count()
     if has_comments:
@@ -83,9 +100,6 @@ def process_comment(request, post, form):
                 comment_type = 'comment'
         else:
             raise APIKeyError("Your akismet key is invalid.")
-
-    #define a response
-    response = HttpResponseRedirect(reverse('blogapp.views.post_by_name', args=[post.name]))
 
     #remember user's data (pickled)
     response.set_cookie('author_name', pickle.dumps(author), max_age=60*60*24*30)
