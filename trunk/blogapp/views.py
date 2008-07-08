@@ -37,6 +37,7 @@ def post_by_name(request, post_name):
                 form = CommentForm(request.POST, auto_id=False)
                 form.errors['generic'] = result
             else:
+                #redirect
                 return result
         else:
             form.errors['generic'] = _("Check that the required fields are filled in correctly.")
