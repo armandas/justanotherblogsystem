@@ -10,9 +10,9 @@
 
         <div id="menu">
             <a href="{% url blogapp.views.homepage %}">{% trans "Home" %}</a>
-            <a href="/galerija/">Foto</a>
+            <!--a href="/galerija/">Foto</a-->
             <a href="http://feeds.feedburner.com/armandas">RSS</a>
-            <!--<a href="http://www.djangoproject.com/"><img src="index_files/djangosite80x15.gif" alt="A Django site." title="A Django site."></a>-->
+
         </div>
         <hr class="hidden">
     </div>
@@ -79,6 +79,12 @@
                     {% endfor %}
                 {% endif %}
                     <li><a href="http://www.last.fm/user/armandas/" style="text-align: center;" rel="me" title="Mano last.fm anketa">[žiūrėti daugiau]</a></li>
+                </ul>
+
+            <h3>Meta</h3>
+                <ul>
+                    <li><a href="http://www.djangoproject.com/"><img src="index_files/djangosite80x15.gif" alt="A Django site." title="A Django site."></a></li>
+                    <!--<li></li>-->
                 </ul>
         </div>
     </div>
