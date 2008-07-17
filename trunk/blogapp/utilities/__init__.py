@@ -1,6 +1,6 @@
 from django.template.loader import get_template
 from django.template import RequestContext
-from django.http import HttpResponseNotFound, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
 from django.newforms import ValidationError
@@ -34,8 +34,10 @@ def not_found(request, title=_('Error 404'), message=_('Page not found')):
     return HttpResponseNotFound(html)
 
 def options(opt_name=None):
-    """If name is given, returns the value of an option (empty string if not found).
-    Otherwise, returns a dictionary of options."""
+    """
+        If name is given, returns the value of an option (empty string if not found).
+        Otherwise, returns a dictionary of options.
+    """
     if opt_name:
         try:
             return Option.objects.get(name=opt_name).value
@@ -45,8 +47,17 @@ def options(opt_name=None):
     options = dict(opt_list)
     return options
 
+def robots_txt(request):
+    """
+        Returns a content of robots.txt setting in options table.
+    """
+    content = options('robots.txt')
+    return HttpResponse(content, mimetype="text/plain")
+
 def escape(value):
-    """This function is based on django.utils.html.escape, but doesn't have issues with unicode."""
+    """
+        This function is based on django.utils.html.escape, but doesn't have issues with unicode.
+    """
     return value.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;').replace("'", '&#39;')
 
 def unpickle_cookies(request):
@@ -57,7 +68,8 @@ def unpickle_cookies(request):
             request.COOKIES[cookie] = ''
 
 def process_comment(request, post, form):
-    """ Processes a comment (anti-flood, anti-repost, amti-spam).
+    """
+        Processes a comment (anti-flood, anti-repost, anti-spam).
         Returns a HTTP Redirect or an error string.
     """
 
@@ -137,12 +149,13 @@ def archive():
     return archives
 
 def tag_list():
-    """Returns a list of dictionaries containing:
-        tag.title
-        tag.name
-        tag.uri
-        tag.size (for tag cloud)
-        tag.post_count
+    """
+        Returns a list of dictionaries containing:
+        - tag.title
+        - tag.name
+        - tag.uri
+        - tag.size (for tag cloud)
+        - tag.post_count
     """
     max_size = int(options('tag_cloud_font_size_max'))
     min_size = int(options('tag_cloud_font_size_min'))
@@ -167,19 +180,21 @@ def tag_list():
     return cloud
 
 def tracklist():
-    """Gets user's tracklist from last.fm feed. Returns a list of dictionaries containing:
-        track.name (title)
-        track.artist
-        track.uri
+    """
+        Gets user's tracklist from last.fm feed. Returns a list of dictionaries containing:
+        - track.name (title)
+        - track.artist
+        - track.uri
     """
     tracklist = []
-    filepath = dirname(__file__)+'/lastfm.cache'
+    filepath = dirname(__file__) + '/lastfm.cache'
     modified_ago = time() - stat(filepath).st_mtime
+    username = options('lastfm_username')
 
     #update files older than 15 minutes
     if modified_ago > 900:
         try:
-            remote = urlopen('http://ws.audioscrobbler.com/1.0/user/armandas/recenttracks.xml')
+            remote = urlopen('http://ws.audioscrobbler.com/1.0/user/%s/recenttracks.xml' % username)
             content = remote.read()
             remote.close()
         except:
@@ -190,6 +205,7 @@ def tracklist():
             local.write(content)
             local.close()
 
+    #maybe cache'ing pickled, parsed content would be better
     x = minidom.parse(filepath)
     tracks = x.getElementsByTagName('track')
     if tracks:

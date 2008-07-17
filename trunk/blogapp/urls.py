@@ -10,4 +10,5 @@ urlpatterns = patterns('blogapp.views',
 
 urlpatterns += patterns('blogapp.utilities',
     (r'xmlrpc/$', 'django_xmlrpc.handle_xmlrpc'),
+    (r'robots.txt$', 'robots_txt'),
 )

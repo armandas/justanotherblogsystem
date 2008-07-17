@@ -103,4 +103,4 @@ def ping(resource, target):
         post=post_id)
     c.save()
 
-    return 'Pingback registered. Thank you.'
+    return "Pingback registered. Thank you."
