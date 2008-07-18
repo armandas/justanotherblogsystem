@@ -186,10 +186,18 @@ def tracklist():
         - track.artist
         - track.uri
     """
-    tracklist = []
+
+    username = options('lastfm_username')
     filepath = dirname(__file__) + '/lastfm.cache'
     modified_ago = time() - stat(filepath).st_mtime
-    username = options('lastfm_username')
+
+    #this is used when file is fresh, or new content is corrupted
+    try:
+        local = open(filepath)
+        tracklist = pickle.load(local)
+        local.close()
+    except:
+        tracklist = []
 
     #update files older than 15 minutes
     if modified_ago > 900:
@@ -199,20 +207,25 @@ def tracklist():
             remote.close()
         except:
             content = None
+
         #don't "update" cache with nothing
         if content:
-            local = open(filepath, 'w')
-            local.write(content)
-            local.close()
+            x = minidom.parseString(content)
+            tracks = x.getElementsByTagName('track')
+            if tracks:
+                tracklist = []
+                for track in tracks:
+                    t = {}
+                    t['name'] = track.getElementsByTagName('name')[0].childNodes[0].nodeValue
+                    t['artist'] = track.getElementsByTagName('artist')[0].childNodes[0].nodeValue
+                    t['uri'] = track.getElementsByTagName('url')[0].childNodes[0].nodeValue
+                    tracklist.append(t)
 
-    #maybe cache'ing pickled, parsed content would be better
-    x = minidom.parse(filepath)
-    tracks = x.getElementsByTagName('track')
-    if tracks:
-        for track in tracks:
-            t = {}
-            t['name'] = track.getElementsByTagName('name')[0].childNodes[0].nodeValue
-            t['artist'] = track.getElementsByTagName('artist')[0].childNodes[0].nodeValue
-            t['uri'] = track.getElementsByTagName('url')[0].childNodes[0].nodeValue
-            tracklist.append(t)
+                #pickle and store tracklist
+                pickled = pickle.dumps(tracklist)
+                local = open(filepath, 'w')
+                local.write(pickled)
+                local.close()
+
     return tracklist
+
