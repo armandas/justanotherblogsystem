@@ -7,7 +7,7 @@
                 <hr class="hidden">
                 <div class="comment">
                     <div class="name">
-                        <h4>{% if comment.author_website %}<a href="{{ comment.author_website }}">{{ comment.author_name|safe }}</a>{% else %}{{ comment.author_name|safe }}{% endif %}</h4>
+                        <h4><a name="#{{ forloop.counter }}">{{ forloop.counter }}</a>. {% if comment.author_website %}<a href="{{ comment.author_website }}">{{ comment.author_name|safe }}</a>{% else %}{{ comment.author_name|safe }}{% endif %}</h4>
                         <small class="date"><em>{{ comment.date|date:"Y-m-d, H:i" }}</em></small>
                     </div>
                     <div class="text">
@@ -19,7 +19,7 @@
                 <div class="comment">
                     <div class="name">
                         <img src="{{ comment.author_email|gravatar }}" alt="{{ comment.author_name }}">
-                        <h4>{% if comment.author_website %}<a href="{{ comment.author_website }}">{{ comment.author_name|safe }}</a>{% else %}{{ comment.author_name|safe }}{% endif %}</h4>
+                        <h4><a name="{{ forloop.counter }}" href="#{{ forloop.counter }}">{{ forloop.counter }}</a>. {% if comment.author_website %}<a href="{{ comment.author_website }}">{{ comment.author_name|safe }}</a>{% else %}{{ comment.author_name|safe }}{% endif %}</h4>
                         <small class="date"><em>{{ comment.date|date:"Y-m-d, H:i" }}</em></small>
                     </div>
                     <div class="text">
