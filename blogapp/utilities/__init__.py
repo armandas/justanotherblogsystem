@@ -105,7 +105,7 @@ def process_comment(request, post, form):
             data['user_agent'] = request.META['HTTP_USER_AGENT']
             data['comment_author_email'] = email
 
-            if api.comment_check(comment, data):
+            if api.comment_check(data['comment_content'], data):
                 comment_type = 'spam'
             else:
                 comment_type = 'comment'
