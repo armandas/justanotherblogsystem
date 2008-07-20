@@ -13,7 +13,11 @@ P_LIMIT = int(options('posts_per_page'))
 
 def homepage(request):
     pg = Paginator(Post.objects.all(), P_LIMIT)
-    page_q = int(request.GET.get('page', 0)) or 1
+    try:
+        page_q = int(request.GET.get('page', 1))
+    except ValueError:
+        page_q = 1
+
     try:
         p = pg.page(page_q)
         posts = p.object_list
