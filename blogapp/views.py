@@ -65,8 +65,13 @@ def posts_by_tag(request, tag_name):
         tag = Tag.objects.get(name=tag_name)
     except ObjectDoesNotExist:
         return not_found(request, message=_("Sorry, the tag you are searching for does not exist."))
+
     pg = Paginator(tag.post_set.all(), P_LIMIT)
-    page_q = int(request.GET.get('page', 0)) or 1
+    try:
+        page_q = int(request.GET.get('page', 1))
+    except ValueError:
+        page_q = 1
+
     try:
         p = pg.page(page_q)
         posts = p.object_list
@@ -79,7 +84,11 @@ def posts_by_date(request, year, month):
     posts = Post.objects.filter(date__year=year, date__month=month)
     if posts:
         pg = Paginator(posts, P_LIMIT)
-        page_q = int(request.GET.get('page', 0)) or 1
+        try:
+            page_q = int(request.GET.get('page', 1))
+        except ValueError:
+            page_q = 1
+
         try:
             p = pg.page(page_q)
             posts = p.object_list
