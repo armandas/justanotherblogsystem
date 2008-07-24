@@ -16,15 +16,15 @@ class Post(models.Model):
     name = models.CharField(max_length=256)
     content = models.TextField(max_length=8192)
     date = models.DateTimeField()
-    photo = models.BooleanField()
+    disable_comments = models.BooleanField()
     tags = models.ManyToManyField(Tag)
 
     def __str__(self):
         return self.name
 
     class Admin:
-        list_display = ('title', 'content', 'date')
-        list_filter = ('tags',)
+        list_display = ('title', 'content', 'date',)
+        list_filter = ('disable_comments', 'tags',)
         ordering = ('-date',)
         search_fields = ('title', 'content')
         list_per_page = 15
@@ -32,19 +32,6 @@ class Post(models.Model):
     class Meta:
         ordering = ["-date"]
 
-
-class Meta(models.Model):
-    created = models.DateField()
-    camera = models.CharField(max_length=32)
-    exposure = models.CharField(max_length=10)
-    aperture = models.CharField(max_length=4)
-    focal_length = models.CharField(max_length=8)
-    flickr_url = models.CharField(max_length=256)
-    description = models.TextField(max_length=256)
-    photo = models.OneToOneField(Post)
-
-    class Admin:
-        list_per_page = 15
 
 class Comment(models.Model):
 
