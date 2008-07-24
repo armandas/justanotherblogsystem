@@ -32,23 +32,27 @@ def post_by_name(request, post_name):
     except ObjectDoesNotExist:
         return not_found(request, message=_("Sorry, the requested post does not exist."))
 
-    if request.method == 'POST':
-        form = CommentForm(request.POST)
-        if form.is_valid():
-            #result will either be a http redirect or an error string
-            result = process_comment(request, post, form)
-            if isinstance(result, unicode):
-                form = CommentForm(request.POST, auto_id=False)
-                form.errors['generic'] = result
+    #check if comments are enabled
+    if not post.disable_comments:
+        if request.method == 'POST':
+            form = CommentForm(request.POST)
+            if form.is_valid():
+                #result will either be a http redirect or an error string
+                result = process_comment(request, post, form)
+                if isinstance(result, unicode):
+                    form = CommentForm(request.POST, auto_id=False)
+                    form.errors['generic'] = result
+                else:
+                    #redirect
+                    return result
             else:
-                #redirect
-                return result
+                form.errors['generic'] = _("Check that the required fields are filled in correctly.")
         else:
-            form.errors['generic'] = _("Check that the required fields are filled in correctly.")
+            #values are pickled to enable unicode strings to be stored
+            unpickle_cookies(request)
+            form = CommentForm(request.COOKIES, auto_id=False)
     else:
-        #values are pickled to enable unicode strings to be stored
-        unpickle_cookies(request)
-        form = CommentForm(request.COOKIES, auto_id=False)
+        form = None
 
     #takes comments where comment_type is 'comment' or 'linkback'
     comments = post.comment_set.filter(comment_type='comment') | post.comment_set.filter(comment_type='linkback')

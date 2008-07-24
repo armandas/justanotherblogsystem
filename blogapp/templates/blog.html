@@ -24,9 +24,17 @@
                 {% include "post.html" %}
             {% endfor %}
 
-            {% if comment_form %}
-                {% include "comments.html" %}
-            {% endif %}
+            <div id="comments">
+                {% if comments %}
+                    {% include "comments.html" %}
+                {% endif %}
+
+                {% if comment_form %}
+                    {% include "comment_form.html" %}
+                {% else %}
+                    <p id="comments_disabled">{% trans "Comments are disabled on this post." %}</p>
+                {% endif %}
+            </div>
 
             {% if page.has_other_pages %}
                 <p id="pagination">
