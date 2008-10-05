@@ -103,6 +103,18 @@ def posts_by_date(request, year, month):
     else:
         return not_found(request, message=_("Sorry, there are no posts written that month."))
 
+def page_by_name(request, page_name):
+    try:
+        page = Page.objects.get(name=page_name)
+    except ObjectDoesNotExist:
+        return not_found(request, message=_("Sorry, the requested page does not exist."))
+
+    context = {
+        'page': page,
+        'title': page.title,
+        }
+    return render_to_response(BLOG_TPL, context, context_instance=RequestContext(request))
+
 def feed(request, feed_type):
     posts = Post.objects.all()[:10]
     template = "feeds/%s.xml" % feed_type
