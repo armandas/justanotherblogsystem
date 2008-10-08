@@ -110,7 +110,7 @@ def page_by_name(request, page_name):
         return not_found(request, message=_("Sorry, the requested page does not exist."))
 
     context = {
-        'page': page,
+        'pages': page,
         'title': page.title,
         }
     return render_to_response(BLOG_TPL, context, context_instance=RequestContext(request))
