@@ -10,6 +10,7 @@
 
         <div id="menu">
             <a href="{% url blogapp.views.homepage %}">{% trans "Home" %}</a>
+            <a href="{% url blogapp.views.page_by_name "apie" %}">Apie</a>
             <!--a href="/galerija/">Foto</a-->
             <a href="http://feeds.feedburner.com/armandas">RSS</a>
 
@@ -21,7 +22,9 @@
         <div id="container">
             <div id="content">
                 {% include "contents.html" %}
-                {% include "page.html" %}
+                {% if pages %}
+                    {% include "page.html" %}
+                {% endif %}
 
                 {% block source %}{% endblock %}
             </div>
