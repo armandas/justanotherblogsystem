@@ -5,16 +5,15 @@
 {% block content %}
     <div id="top">
         <div id="header">
-            <h1><span>Armando foto+blogas</span></h1>
+        <h1><span><a style="color: white;" href="http://www.armandas.lt/" rel="me">{{ options.blog_title }}</a></span></h1>
         </div>
 
-        <div id="menu">
-            <a href="{% url blogapp.views.homepage %}">{% trans "Home" %}</a>
-            <a href="{% url blogapp.views.page_by_name "apie" %}">Apie</a>
-            <!--a href="/galerija/">Foto</a-->
-            <a href="http://feeds.feedburner.com/armandas">RSS</a>
-
-        </div>
+        <ul id="menu">
+            <!--li><a href="{% url blogapp.views.homepage %}">{% trans "Home" %}</a></li-->
+            <li><a href="{% url blogapp.views.page_by_name "apie" %}">Apie</a></li>
+            <li><a href="http://feeds.feedburner.com/armandas">RSS</a></li>
+            <li><a href="http://projects.armandas.lt">English</a></li>
+        </ul>
         <hr class="hidden">
     </div>
 

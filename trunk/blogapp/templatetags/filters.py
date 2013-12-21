@@ -52,7 +52,27 @@ def gravatar(email):
     uri = "http://www.gravatar.com/avatar.php?gravatar_id=%s&size=%s&default=%s"
     return uri % (gravatar_id, gravatar_size, default)
 
+def date_translate(date_en):
+    months_lt_en = [("Sau", "Jan"),
+                    ("Vas", "Feb"),
+                    ("Kov", "Mar"),
+                    ("Bal", "Apr"),
+                    ("Geg", "May"),
+                    ("Bir", "Jun"),
+                    ("Lie", "Jul"),
+                    ("Rugp", "Aug"),
+                    ("Rugs", "Sep"),
+                    ("Spa", "Oct"),
+                    ("Lap", "Nov"),
+                    ("Grd", "Dec"),]
+
+    for (lt, en) in months_lt_en:
+        date_lt = date_en.replace(lt, en)
+
+    return date_lt
+
 #register filters
+register.filter(date_translate)
 register.filter(rel_decode) #imported
 register.filter(count_comments)
 register.filter(dgs)

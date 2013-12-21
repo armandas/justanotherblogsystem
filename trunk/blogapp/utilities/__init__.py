@@ -60,6 +60,12 @@ def escape(value):
     """
     return value.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;').replace("'", '&#39;')
 
+def sitemap(request):
+    post_names = Post.objects.values('name')
+    page_names = Page.objects.values('name')
+    context = {'posts': post_names, 'pages': page_names}
+    return render_to_response('sitemap.xml', context, mimetype="application/xml")
+
 def unpickle_cookies(request):
     for cookie in request.COOKIES:
         try:
@@ -79,6 +85,11 @@ def process_comment(request, post, form):
     website = form.cleaned_data.get('author_website', '').strip()
     ip = request.META['REMOTE_ADDR']
     comment = form.cleaned_data['comment'].strip()
+    bot_value = form.cleaned_data.get('bot_value', '').strip()
+
+    # check if hidden field was filld
+    if bot_value != '':
+        return _("ID-10T Error occurred. Please update your browser.")
 
     #anti-flood and anti-repost
     has_comments = Comment.objects.filter(author_email=email).order_by('-date')
@@ -106,6 +117,7 @@ def process_comment(request, post, form):
             data['comment_author_email'] = email
 
             if api.comment_check(data['comment_content'], data):
+                return _("ID-10T Error occurred. Please update your browser.")
                 comment_type = 'spam'
             else:
                 comment_type = 'comment'

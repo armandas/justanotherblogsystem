@@ -21,7 +21,7 @@ class Tag(models.Model):
     def save(self, force_insert=False, force_update=False):
         if not self.name:
             self.name = slugify(self.title)
-        super(Post, self).save(force_insert, force_update)
+        super(Tag, self).save(force_insert, force_update)
 
     class Meta:
         ordering = ["name"]
@@ -57,7 +57,7 @@ class Page(models.Model):
     def save(self, force_insert=False, force_update=False):
         if not self.name:
             self.name = slugify(self.title)
-        super(Post, self).save(force_insert, force_update)
+        super(Page, self).save(force_insert, force_update)
 
     class Meta:
         ordering = ["name"]

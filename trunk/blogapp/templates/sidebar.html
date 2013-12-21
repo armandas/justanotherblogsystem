@@ -1,6 +1,27 @@
 {% load filters %}
 {% load i18n %}
-            <p><script type="text/javascript" src="http://www.ubuntu.com/files/countdown/display.js"></script></p>
+            <h3>Paieška</h3>
+            <form action="http://www.google.com/cse" id="cse-search-box">
+                <div>
+                    <input type="hidden" name="cx" value="015537480257906970513:vlorie8a_eo">
+                    <input type="hidden" name="ie" value="UTF-8">
+                    <input type="text" name="q">
+                    <input type="submit" name="sa" value="Paieška">
+                </div>
+            </form>
+
+            {% if friends %}
+            <!--h3>{% trans "Blogroll" %}</h3>
+                <ul>
+                <li><a href="http://dabasinskas.net/" rel="friend">Tomas</a></li>
+                </ul-->
+
+            <h3>Rekomenduoju</h3>
+                <ul>
+                    <li><a href="http://www.armandas.lt/blogai-elektronikos-tematika.html">Blogai elektronikos tema</a></li>
+                </ul>
+            {% endif %}
+
             {% if tags %}
             <h3>{% trans "Tags" %}</h3>
                 <p style="text-align: center">
@@ -19,22 +40,6 @@
                 </ul>
             {% endif %}
 
-            {% if friends %}
-            <h3>{% trans "Blogroll" %}</h3>
-                <ul>
-                {% for friend in friends %}
-                    <li><a href="{{ friend.uri }}" rel="{{ friend.rel|rel_decode }}"{% if friend.about %} title="{{ friend.about }}"{% endif %}>{{ friend.name }}</a></li>
-                {% endfor %}
-                <li><a href="http://gotblog.org/" rel="contact">Ernestas</a></li>
-                </ul>
-            {% endif %}
+                <p style="text-align:center;"><a href="http://djangohosting.ch"><img src="http://static.armandas.lt/res/images/djangohosting.png" alt="Django Hosting"></a></p>
 
-            <h3>Muzika</h3>
-                <ul>
-                {% if tracklist %}
-                    {% for track in tracklist %}
-                    <li><a href="{{ track.uri }}" title="{{ track.artist }} ‒ {{ track.name }}" rel="nofollow">{{ track.artist }} ‒ {{ track.name }}</a></li>
-                    {% endfor %}
-                {% endif %}
-                    <li><a href="http://www.last.fm/user/armandas/" style="text-align: center;" rel="me" title="Mano last.fm anketa">[žiūrėti daugiau]</a></li>
-                </ul>
+                <script type="text/javascript" src="http://www.google.com/coop/cse/brand?form=cse-search-box&lang=lt"></script>
