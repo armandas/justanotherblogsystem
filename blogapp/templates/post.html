@@ -2,7 +2,7 @@
 {% load i18n %}
     <div class="post">
         <h2><a href="{% url blogapp.views.post_by_name post.name %}">{{ post.title }}</a></h2>
-        <small>{% trans "Posted" %} {{ post.date|date:"Y-m-d, H:i" }} | <a href="{% url blogapp.views.homepage %}{{post.name}}.html#comments">{{ post|count_comments|dgs:"Komentarai" }}</a></small>
+        <span><small>{% trans "Posted" %} {{ post.date|date:"Y-m-d, H:i" }} | <a href="{% url blogapp.views.homepage %}{{post.name}}.html#comments">{{ post|count_comments|dgs:"Komentarai" }}</a></small></span>
         {{ post.content|safe }}
     <p><small>{% trans "Tags" %}: {{ post.tags.all|link_tags|join:", "|safe }}</small></p>
     </div>

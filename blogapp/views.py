@@ -1,6 +1,7 @@
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.utils.translation import ugettext as _
+from django.utils.html import strip_tags
 from django.core.paginator import Paginator, InvalidPage
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -32,6 +33,8 @@ def post_by_name(request, post_name):
     except ObjectDoesNotExist:
         return not_found(request, message=_("Sorry, the requested post does not exist."))
 
+    description = strip_tags(post.content).strip().split('\r\n')[0][:150] + '...'
+
     #check if comments are enabled
     if not post.disable_comments:
         if request.method == 'POST':
@@ -58,6 +61,7 @@ def post_by_name(request, post_name):
     comments = post.comment_set.filter(comment_type='comment') | post.comment_set.filter(comment_type='linkback')
     context = {
         'posts': [post],
+        'desc': description,
         'comments': comments,
         'title': post.title,
         'comment_form': form,
@@ -126,3 +130,9 @@ def feed(request, feed_type):
         'options': options(),
         }
     return render_to_response(template, context, mimetype=m_type)
+
+def sitemap(request):
+    post_names = Post.objects.values('name')
+    page_names = Page.objects.values('name')
+    context = {'posts': post_names, 'pages': page_names}
+    return render_to_response('sitemap.xml', context, mimetype="application/xml")
